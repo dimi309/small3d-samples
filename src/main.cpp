@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include <conio.h>
+#include <stdio.h>
 
 int position[2];
 
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
   posY = 0;
   
   char c;
-  while ((c = getch()) != 27) {
+  while ((c = getchar()) != 27) {
     switch(c) {
     case 'q':
       posX--;
