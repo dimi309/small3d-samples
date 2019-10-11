@@ -26,7 +26,7 @@ void render() {
 
 
 int main(int argc, char** argv) {
-  std::ifstream mapfile("map.txt");
+  std::ifstream mapfile("resources/map.txt");
   if (mapfile.is_open()) {
     
     std::string line;
