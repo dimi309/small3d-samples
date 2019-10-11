@@ -10,7 +10,7 @@ std::vector<std::string> map;
 
 void render() {
 
-  for (int y = 0; y < 3; ++y) {
+  for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {
       for (int x = 0; x < 3; ++x) {
   if (posX + x >= 0 && posX + x < map[posY + y].size()) {
