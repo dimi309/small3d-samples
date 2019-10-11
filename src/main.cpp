@@ -1,32 +1,47 @@
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
-
-int position[2];
+#include <vector>
+#include <exception>
 
 int posX, posY;
 
+std::vector<std::string> map;
+
 void render() {
+
+  for (int y = 0; y < 3; ++y) {
+    if (posY + y >= 0 && posY + y < map.size()) {
+      for (int x = 0; x < 3; ++x) {
+  if (posX + x >= 0 && posX + x < map[posY + y].size()) {
+    std::cout << map[posY + y][posX + x] ;
+  }
+      }
+      std::cout << std::endl;
+    }
+  }
+  
   std::cout << "x: " << posX << " y: " <<  posY << std::endl;
 }
 
 int main(int argc, char** argv) {
-  std::ifstream map("map.txt");
-  if (map.is_open()) {
-    std::cout << "Map is open." << std::endl;
-    char line[100];
+  std::ifstream mapfile("map.txt");
+  if (mapfile.is_open()) {
+    
+    std::string line;
 
-    while(map.getline(line, 100)) {
-      std::cout << line;
-      std::string linestr(line);
-      std::cout << linestr.size() << std::endl;
+    while(std::getline(mapfile, line)) {
+      std::cout << line << " " << line.size() << std::endl;
+      map.push_back(line);
     }
+
+    
   }
   else {
-    std::cout << "Map is not open." << std::endl;
+    throw std::runtime_error("Could not open map file.");
   }
 
-  if (map.is_open()) map.close();
+  if (mapfile.is_open()) mapfile.close();
 
   posX = 0;
   posY = 0;
@@ -49,7 +64,6 @@ int main(int argc, char** argv) {
     default:
       //do nothing
       break;
-     
     }
     render();
   }
