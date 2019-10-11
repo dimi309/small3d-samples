@@ -13,9 +13,9 @@ void render() {
   for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {
       for (int x = 0; x < 3; ++x) {
-  if (posX + x >= 0 && posX + x < map[posY + y].size()) {
-    std::cout << map[posY + y][posX + x] ;
-  }
+	if (posX + x >= 0 && posX + x < map[posY + y].size()) {
+	  std::cout << map[posY + y][posX + x] ;
+	}
       }
       std::cout << std::endl;
     }
@@ -23,6 +23,7 @@ void render() {
   
   std::cout << "x: " << posX << " y: " <<  posY << std::endl;
 }
+
 
 int main(int argc, char** argv) {
   std::ifstream mapfile("map.txt");
@@ -34,8 +35,6 @@ int main(int argc, char** argv) {
       std::cout << line << " " << line.size() << std::endl;
       map.push_back(line);
     }
-
-    
   }
   else {
     throw std::runtime_error("Could not open map file.");
