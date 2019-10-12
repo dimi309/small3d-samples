@@ -6,13 +6,18 @@
  *    License: BSD 3-Clause License (see LICENSE file)
  */
 
-#include "Game.cpp"
+#include "Game.hpp"
 #include <fstream>
 #include <vector>
+#include <small3d/Logger.hpp>
+
+using namespace small3d;
 
 Game::Game() {
 
-  initLogger();
+  small3d::initLogger();
+
+  renderer = &small3d::Renderer::getInstance("Groom");
   
   std::ifstream mapfile("resources/map.txt");
   if (mapfile.is_open()) {
@@ -26,16 +31,19 @@ Game::Game() {
   else {
     throw std::runtime_error("Could not open map file.");
   }
-
 }
 
-Game::init() {
+GLFWwindow* Game::getWindow() {
+  return renderer->getWindow();
 }
 
-Game::terminate() {
+void Game::init() {
 }
 
-Game::process() {
+void Game::terminate() {
+}
+
+void Game::process() {
     /*if (mapfile.is_open()) mapfile.close();
 
   posX = 0;
@@ -65,7 +73,7 @@ Game::process() {
   */
 }
 
-Game::render() {
+void Game::render() {
   /*
 for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {

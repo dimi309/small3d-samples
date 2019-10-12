@@ -7,8 +7,7 @@
  */
 
 #include "KeyInput.hpp"
-
-using namespace small3d;
+#include "Game.hpp"
 
 KeyInput input;
 
@@ -17,47 +16,47 @@ bool downkey, leftkey, rightkey, upkey, esckey, enterkey;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action,
 		 int mods) {
   if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-    input.downkey = true;
+    input.down = true;
   if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-    input.upkey = true;
+    input.up = true;
   if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-    input.leftkey = true;
+    input.left = true;
   if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-    input.rightkey = true;
+    input.right = true;
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    input.esckey = true;
+    input.esc = true;
   if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
-    input.enterkey = true;
+    input.enter = true;
   if (key == GLFW_KEY_DOWN && action == GLFW_RELEASE)
-    input.downkey = false;
+    input.down = false;
   if (key == GLFW_KEY_UP && action == GLFW_RELEASE)
-    input.upkey = false;
+    input.up = false;
   if (key == GLFW_KEY_LEFT && action == GLFW_RELEASE)
-    input.leftkey = false;
+    input.left = false;
   if (key == GLFW_KEY_RIGHT && action == GLFW_RELEASE)
-    input.rightkey = false;
+    input.right = false;
   if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-    input.esckey = false;
+    input.esc = false;
   if (key == GLFW_KEY_ENTER && action == GLFW_RELEASE)
-    input.enterkey = false;
+    input.enter = false;
   
 }
 
 int main(int argc, char** argv) {
 
-  Renderer *renderer = &Renderer::getInstance("Groom");
-
-  GLFWwindow *window = renderer->getWindow();
+  Game game;
+  
+  GLFWwindow *window = game.getWindow();
 
   glfwSetKeyCallback(window, keyCallback);
   
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
-    if (input.esckey) {
+    if (input.esc) {
       break;
     }
   }  
-
+  
   return 0;
 }

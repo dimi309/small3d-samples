@@ -13,14 +13,16 @@ class Game {
 
 private:
 
-  int posX, posY;
-
+  int posX;
+  int posY;
+  small3d::Renderer *renderer;
   std::vector<std::string> map;
 
 public:
   Game();
-  init();
-  terminate();
-  process();
-  render();
-}
+  GLFWwindow* getWindow();
+  void init();
+  void terminate();
+  void process();
+  void render();
+};

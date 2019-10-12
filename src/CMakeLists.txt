@@ -1,4 +1,4 @@
-add_executable(groom main.cpp)
+add_executable(groom main.cpp Game.cpp KeyInput.hpp Game.hpp)
 
 target_include_directories(groom PUBLIC
   ${SMALL3D_INCLUDE_DIR}
@@ -49,4 +49,3 @@ if(MSVC)
   set_target_properties(groom PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     "${small3d_BINARY_DIR}/bin")
 endif(MSVC)
-
