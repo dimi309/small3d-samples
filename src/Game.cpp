@@ -19,8 +19,6 @@ Game::Game() {
 
   map.load("resources/map.txt");
 
-  const char* test = map.getRegion(4, 1, 1);
-  
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = 3.2f;
@@ -67,11 +65,32 @@ void Game::process() {
 }
 
 void Game::renderEnv() {
+  
+  const char* region = map.getRegion(4, 1, 1);
 
+  for (int y = 0; y < 3; ++y) {
+    for (int x = 0; x < 3; ++x) {
+      if (region[y * 3 + x] == '#') {
+        
+        // top row
+        for (int idx = 0; idx < 3; ++idx) {
+          renderer->renderRectangle("tileTexture", glm::vec3(-6.0f + 4 * idx, 7.0f, -10.0f),
+            glm::vec3(-2.0f + 4 * idx, 3.0f, -10.0f), true);
+        }
+     
+        // bottom row
+        for (int idx = 0; idx < 3; ++idx) {
+          renderer->renderRectangle("tileTexture", glm::vec3(-6.0f + 4 * idx, 3.0f, -10.0f),
+            glm::vec3(-2.0f + 4 * idx, -1.0f, -10.0f), true);
+        }
+      }
+    }
+  }
 }
 
 void Game::render() {
-  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -10.0f),
+  renderEnv();
+  /*renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -10.0f),
                               glm::vec3(2.0f, -1.0f, -6.0f), true);
   renderer->renderRectangle("tileTexture", glm::vec3(2.0f, -1.0f, -10.0f),
                               glm::vec3(6.0f, -1.0f, -6.0f), true);
@@ -88,7 +107,7 @@ void Game::render() {
 
   renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -6.0f),
 			    glm::vec3(2.0f, 7.0f, -10.0f), true);
-  
+  */
   renderer->swapBuffers();
   
 }
