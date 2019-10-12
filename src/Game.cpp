@@ -15,9 +15,11 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Groom");
+  renderer = &small3d::Renderer::getInstance("Groom", 800, 600);
 
   map.load("resources/map.txt");
+
+  const char* test = map.getRegion(4, 1, 1);
   
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
@@ -62,6 +64,10 @@ void Game::process() {
     render();
   }
   */
+}
+
+void Game::renderEnv() {
+
 }
 
 void Game::render() {

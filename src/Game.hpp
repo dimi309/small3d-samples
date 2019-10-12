@@ -18,6 +18,7 @@ private:
   int posY;
   small3d::Renderer *renderer;
   Map map;
+  void renderEnv();
 
 public:
   Game();
