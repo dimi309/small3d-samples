@@ -96,9 +96,10 @@ void Game::render() {
   renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -6.0f),
 			    glm::vec3(2.0f, 7.0f, -10.0f), true);
   
-  renderer->swapBuffers();    
+  renderer->swapBuffers();
+  
   /*
-for (int y = -1; y < 2; ++y) {
+  for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {
       for (int x = 0; x < 3; ++x) {
 	if (posX + x >= 0 && posX + x < map[posY + y].size()) {
