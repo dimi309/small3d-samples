@@ -7,8 +7,6 @@
  */
 
 #include "Game.hpp"
-#include <fstream>
-#include <vector>
 #include <small3d/Logger.hpp>
 
 using namespace small3d;
@@ -18,20 +16,9 @@ Game::Game() {
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Groom");
-  
-  std::ifstream mapfile("resources/map.txt");
-  if (mapfile.is_open()) {
-    std::string line;
-    while(std::getline(mapfile, line)) {
-      map.push_back(line);
-    }
-    LOGDEBUG("Loaded map.");
-    mapfile.close();
-  }
-  else {
-    throw std::runtime_error("Could not open map file.");
-  }
 
+  map.load("resources/map.txt");
+  
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = 3.2f;

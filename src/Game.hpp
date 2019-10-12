@@ -8,6 +8,7 @@
 #pragma once
 
 #include <small3d/Renderer.hpp>
+#include "Map.hpp"
 
 class Game {
 
@@ -16,7 +17,7 @@ private:
   int posX;
   int posY;
   small3d::Renderer *renderer;
-  std::vector<std::string> map;
+  Map map;
 
 public:
   Game();
