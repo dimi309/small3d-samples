@@ -85,18 +85,4 @@ void Game::render() {
   
   renderer->swapBuffers();
   
-  /*
-  for (int y = -1; y < 2; ++y) {
-    if (posY + y >= 0 && posY + y < map.size()) {
-      for (int x = 0; x < 3; ++x) {
-	if (posX + x >= 0 && posX + x < map[posY + y].size()) {
-	  std::cout << map[posY + y][posX + x] ;
-	}
-      }
-      std::cout << std::endl;
-    }
-  }
-  
-  std::cout << "x: " << posX << " y: " <<  posY << std::endl;
-  */
 }

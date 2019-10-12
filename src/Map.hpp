@@ -13,9 +13,13 @@
 class Map {
 
 private:
-    std::vector<std::string> mapData;
-
+  std::vector<std::string> mapData;
+  char *region;
+  const uint32_t maxRegionRadius = 10;
+  
 public:
   Map();
+  ~Map();
   void load(std::string filepath);
+  const char* getRegion(int coordx, int coordy, int radius);
 };
