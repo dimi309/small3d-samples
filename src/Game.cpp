@@ -31,6 +31,10 @@ Game::Game() {
   else {
     throw std::runtime_error("Could not open map file.");
   }
+
+  renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
+
+  renderer->cameraPosition.y = 3.2f;
 }
 
 GLFWwindow* Game::getWindow() {
@@ -74,6 +78,25 @@ void Game::process() {
 }
 
 void Game::render() {
+  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -10.0f),
+                              glm::vec3(2.0f, -1.0f, -6.0f), true);
+  renderer->renderRectangle("tileTexture", glm::vec3(2.0f, -1.0f, -10.0f),
+                              glm::vec3(6.0f, -1.0f, -6.0f), true);
+  
+  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -6.0f),
+                              glm::vec3(2.0f, -1.0f, -2.0f), true);
+  renderer->renderRectangle("tileTexture", glm::vec3(2.0f, -1.0f, -6.0f),
+                              glm::vec3(6.0f, -1.0f, -2.0f), true);
+
+  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 3.0f, -10.0f),
+                              glm::vec3(2.0f, -1.0f, -10.0f), true);
+  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -10.0f),
+                              glm::vec3(2.0f, 3.0f, -10.0f), true);
+
+  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -6.0f),
+			    glm::vec3(2.0f, 7.0f, -10.0f), true);
+  
+  renderer->swapBuffers();    
   /*
 for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {

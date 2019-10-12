@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
   
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
-
+    game.render();
     if (input.esc) {
       break;
     }
