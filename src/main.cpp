@@ -1,3 +1,12 @@
+/*
+ * KeyInput.hpp
+ *
+ *  Created on: 12 Oct 2019
+ *      Author: Dimitri Kourkoulis
+ *     License: BSD 3-Clause License (see LICENSE file)
+ */
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -44,8 +53,6 @@ std::vector<std::string> map;
 
 void render() {
 
-  
-
   for (int y = -1; y < 2; ++y) {
     if (posY + y >= 0 && posY + y < map.size()) {
       for (int x = 0; x < 3; ++x) {
@@ -69,11 +76,6 @@ int main(int argc, char** argv) {
 
   glfwSetKeyCallback(window, keyCallback);
 
-  while (!glfwWindowShouldClose(window)) {
-    glfwPollEvents();
-  }
-  
-  
   std::ifstream mapfile("resources/map.txt");
   if (mapfile.is_open()) {
     
@@ -88,7 +90,14 @@ int main(int argc, char** argv) {
     throw std::runtime_error("Could not open map file.");
   }
 
-  if (mapfile.is_open()) mapfile.close();
+  while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
+  }
+  
+  
+  
+
+  /*if (mapfile.is_open()) mapfile.close();
 
   posX = 0;
   posY = 0;
@@ -114,5 +123,6 @@ int main(int argc, char** argv) {
     }
     render();
   }
+  */
   return 0;
 }
