@@ -114,21 +114,13 @@ void Game::process(const KeyInput &input) {
 
 void Game::renderEnv(int radius) {
   
-  int regCenterX = playerCoords.x;
-  int regCenterY = playerCoords.y;
-  
-  if (regCenterX < radius) regCenterX = radius;
-  if (regCenterY < radius) regCenterY = radius;
-  
-  if (regCenterX > xMapSize - radius) regCenterX = xMapSize - radius;
-  if (regCenterY > yMapSize - radius) regCenterY = yMapSize -radius;
-
-  const char* region = map.getRegion(regCenterX, regCenterY, radius);
+  const char* region = map.getRegion(playerCoords.x, playerCoords.y, radius);
 
   int length = 2 * radius + 1;
 
   for (int y = 0; y < length; ++y) {
     for (int x = 0; x < length; ++x) {
+      if (y * length + x >= 0 && y * length + x < xMapSize * yMapSize) {
       if (region[y * length + x] == '#') {
 
         for (int didx = 0; didx < 3; ++didx) {
@@ -149,6 +141,7 @@ void Game::renderEnv(int radius) {
         renderer->renderRectangle("tileTexture", glm::vec3(-18.0f + x * 12.0f, -1.0f, 2.0f - (2 - y) * 12.0f),
           glm::vec3(-6.0f + x * 12.0f, -1.0f, 14.0f - (2 - y) * 12.0f), true);
       }
+      }
     }
   }
 }
@@ -156,14 +149,15 @@ void Game::renderEnv(int radius) {
 void Game::render() {
   renderEnv(2);
   
-  std::string cameraPosStr = "x: ";
+  /*std::string cameraPosStr = "x: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
-  
+  cameraPosStr += " coordX: " + intToStr(playerCoords.x);
+  cameraPosStr += " coordY: " + intToStr(playerCoords.y);
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-                  glm::vec2(0.4f, -0.9f), glm::vec2(1.0f, -1.0f));
-  
+                  glm::vec2(0.2f, -0.8f), glm::vec2(1.0f, -1.0f));
+  */
   renderer->swapBuffers();
   
 
