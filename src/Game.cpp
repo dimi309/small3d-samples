@@ -149,7 +149,7 @@ void Game::renderEnv(int radius) {
 void Game::render() {
   renderEnv(2);
   
-  /*std::string cameraPosStr = "x: ";
+  std::string cameraPosStr = "x: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
@@ -157,8 +157,7 @@ void Game::render() {
   cameraPosStr += " coordY: " + intToStr(playerCoords.y);
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
                   glm::vec2(0.2f, -0.8f), glm::vec2(1.0f, -1.0f));
-  */
+  
   renderer->swapBuffers();
   
-
 }
