@@ -54,3 +54,7 @@ const char* Map::getRegion(int coordx, int coordy, int radius) {
   
   return region;
 }
+
+char Map::getLocation(int coordx, int coordy) {
+  return mapData[coordy][coordx];
+}

@@ -11,7 +11,7 @@
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.1f
-#define CAMERA_SPEED 0.65f
+#define CAMERA_SPEED 0.95f
 
 using namespace small3d;
 
@@ -68,46 +68,50 @@ void Game::process(const KeyInput &input) {
     renderer->cameraPosition.z += cos(renderer->cameraRotation.y) * CAMERA_SPEED;
   }
   
-  if (renderer->cameraPosition.x < 0.0f ) {
+  if (renderer->cameraPosition.x < -4.0f ) {
     
-    if (playerCoords.x > 0) {
+    if (playerCoords.x > 0 &&
+        map.getLocation(playerCoords.x - 1, playerCoords.y) != '#') {
       --playerCoords.x;
-      renderer->cameraPosition.x = 10.0f;
+      renderer->cameraPosition.x = 0.0f;
     }
     else {
-      renderer->cameraPosition.x = 0.0f;
+      renderer->cameraPosition.x = -4.0f;
     }
   }
   
-  if (renderer->cameraPosition.x > 10.0f ) {
-    if (playerCoords.x < xMapSize) {
+  if (renderer->cameraPosition.x > 4.0f ) {
+    if (playerCoords.x < xMapSize - 1 &&
+    map.getLocation(playerCoords.x + 1, playerCoords.y) != '#') {
       ++playerCoords.x;
       renderer->cameraPosition.x = 0.0f;
     }
     else {
-      renderer->cameraPosition.x = 10.0f;
+      renderer->cameraPosition.x = 4.0f;
     }
   }
   
-  if (renderer->cameraPosition.z > 10.0f ) {
+  if (renderer->cameraPosition.z > 4.0f ) {
     
-    if (playerCoords.y < yMapSize) {
+    if (playerCoords.y < yMapSize - 1 &&
+    map.getLocation(playerCoords.x, playerCoords.y + 1) != '#') {
       ++playerCoords.y;
       renderer->cameraPosition.z = 0.0f;
     }
     else {
-      renderer->cameraPosition.z = 10.0f;
+      renderer->cameraPosition.z = 4.0f;
     }
   }
   
-  if (renderer->cameraPosition.z < -10.0f ) {
+  if (renderer->cameraPosition.z < -4.0f ) {
     
-    if (playerCoords.y > 0) {
+    if (playerCoords.y > 0 &&
+    map.getLocation(playerCoords.x, playerCoords.y - 1) != '#') {
       --playerCoords.y;
       renderer->cameraPosition.z = 0.0f;
     }
     else {
-      renderer->cameraPosition.z = -10.0f;
+      renderer->cameraPosition.z = -4.0f;
     }
   }
 }
@@ -127,19 +131,19 @@ void Game::renderEnv(int radius) {
          
           for (int idx = 0; idx < 3; ++idx) {
             // top
-            renderer->render(cube, glm::vec3(-18.0f + x * 12.0f + 4 * idx, 3.0f, -10.0f + y * 12.0f - didx * 4),
+            renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, 3.0f, -18.0f + y * 12.0f - didx * 4),
               glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
             // bottom
-            renderer->render(cube, glm::vec3(-18.0f + x * 12.0f + 4 * idx, -1.0f, -10.0f + y * 12.0f - didx * 4),
+            renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, -1.0f, -18.0f + y * 12.0f - didx * 4),
               glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
           }
         }
       }
       else {
-        renderer->renderRectangle("tileTexture", glm::vec3(-18.0f + x * 12.0f, 7.0f, 14.0f - (2 - y) * 12.0f),
-          glm::vec3(-6.0f + x * 12.0f, 7.0f, 2.0f - (2 - y) * 12.0f), true);
-        renderer->renderRectangle("tileTexture", glm::vec3(-18.0f + x * 12.0f, -1.0f, 2.0f - (2 - y) * 12.0f),
-          glm::vec3(-6.0f + x * 12.0f, -1.0f, 14.0f - (2 - y) * 12.0f), true);
+        renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, 7.0f, 6.0f - (2 - y) * 12.0f),
+          glm::vec3(-18.0f + x * 12.0f, 7.0f, -6.0f - (2 - y) * 12.0f), true);
+        renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, -1.0f, -6.0f - (2 - y) * 12.0f),
+          glm::vec3(-18.0f + x * 12.0f, -1.0f, 6.0f - (2 - y) * 12.0f), true);
       }
       }
     }
@@ -150,14 +154,14 @@ void Game::render() {
   renderEnv(2);
   
   std::string cameraPosStr = "x: ";
-  cameraPosStr += floatToStr(renderer->cameraPosition.x);
+  /*cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
   cameraPosStr += " coordX: " + intToStr(playerCoords.x);
   cameraPosStr += " coordY: " + intToStr(playerCoords.y);
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
                   glm::vec2(0.2f, -0.8f), glm::vec2(1.0f, -1.0f));
-  
+  */
   renderer->swapBuffers();
   
 }

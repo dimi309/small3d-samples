@@ -23,4 +23,5 @@ public:
   ~Map();
   void load(std::string filepath);
   const char* getRegion(int coordx, int coordy, int radius);
+  char getLocation(int coordx, int coordy);
 };
