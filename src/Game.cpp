@@ -15,13 +15,19 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Groom", 800, 600);
+  renderer = &small3d::Renderer::getInstance("Groom", 800, 600, 1.0f,
+    1.0f, 24.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
+
+  cube = Model("resources/cube.obj");
 
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = 3.2f;
+ // renderer->cameraPosition.x = 22.2f;
+  renderer->cameraRotation.y = 1.7f;
+ // renderer->cameraPosition.z = 4.0f;
 }
 
 GLFWwindow* Game::getWindow() {
@@ -35,79 +41,72 @@ void Game::terminate() {
 }
 
 void Game::process() {
-    /*if (mapfile.is_open()) mapfile.close();
+  /*if (mapfile.is_open()) mapfile.close();
 
-  posX = 0;
-  posY = 0;
-  
-  char c;
-  while ((c = getchar()) != 27) {
-    switch(c) {
-    case 'q':
-      posX--;
-      break;
-    case 'd':
-      posX++;
-      break;
-    case 'z':
-      ++posY;
-      break;
-    case 's':
-      --posY;
-      break;
-    default:
-      //do nothing
-      break;
-    }
-    render();
+posX = 0;
+posY = 0;
+
+char c;
+while ((c = getchar()) != 27) {
+  switch(c) {
+  case 'q':
+    posX--;
+    break;
+  case 'd':
+    posX++;
+    break;
+  case 'z':
+    ++posY;
+    break;
+  case 's':
+    --posY;
+    break;
+  default:
+    //do nothing
+    break;
   }
-  */
+  render();
+}
+*/
 }
 
-void Game::renderEnv() {
-  
-  const char* region = map.getRegion(4, 1, 1);
 
-  for (int y = 0; y < 3; ++y) {
-    for (int x = 0; x < 3; ++x) {
-      if (region[y * 3 + x] == '#') {
-        
-        // top row
-        for (int idx = 0; idx < 3; ++idx) {
-          renderer->renderRectangle("tileTexture", glm::vec3(-6.0f + 4 * idx, 7.0f, -10.0f),
-            glm::vec3(-2.0f + 4 * idx, 3.0f, -10.0f), true);
+
+void Game::renderEnv(int radius) {
+
+  const char* region = map.getRegion(2, 2, radius);
+
+  int length = 2 * radius + 1;
+
+  for (int y = 0; y < length; ++y) {
+    for (int x = 0; x < length; ++x) {
+      if (region[y * length + x] == '#') {
+
+        for (int didx = 0; didx < 3; ++didx) {
+         
+          for (int idx = 0; idx < 3; ++idx) {
+            // top
+            renderer->render(cube, glm::vec3(-18.0f + x * 12.0f + 4 * idx, 3.0f, -10.0f + y * 12.0f - didx * 4),
+              glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+            // bottom
+            renderer->render(cube, glm::vec3(-18.0f + x * 12.0f + 4 * idx, -1.0f, -10.0f + y * 12.0f - didx * 4),
+              glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+          }
         }
-     
-        // bottom row
-        for (int idx = 0; idx < 3; ++idx) {
-          renderer->renderRectangle("tileTexture", glm::vec3(-6.0f + 4 * idx, 3.0f, -10.0f),
-            glm::vec3(-2.0f + 4 * idx, -1.0f, -10.0f), true);
-        }
+      }
+      else {
+        renderer->renderRectangle("tileTexture", glm::vec3(-18.0f + x * 12.0f, 7.0f, 14.0f - (2 - y) * 12.0f),
+          glm::vec3(-6.0f + x * 12.0f, 7.0f, 2.0f - (2 - y) * 12.0f), true);
+        renderer->renderRectangle("tileTexture", glm::vec3(-18.0f + x * 12.0f, -1.0f, 2.0f - (2 - y) * 12.0f),
+          glm::vec3(-6.0f + x * 12.0f, -1.0f, 14.0f - (2 - y) * 12.0f), true);
       }
     }
   }
 }
 
 void Game::render() {
-  renderEnv();
-  /*renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -10.0f),
-                              glm::vec3(2.0f, -1.0f, -6.0f), true);
-  renderer->renderRectangle("tileTexture", glm::vec3(2.0f, -1.0f, -10.0f),
-                              glm::vec3(6.0f, -1.0f, -6.0f), true);
+  renderEnv(2);
   
-  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, -1.0f, -6.0f),
-                              glm::vec3(2.0f, -1.0f, -2.0f), true);
-  renderer->renderRectangle("tileTexture", glm::vec3(2.0f, -1.0f, -6.0f),
-                              glm::vec3(6.0f, -1.0f, -2.0f), true);
-
-  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 3.0f, -10.0f),
-                              glm::vec3(2.0f, -1.0f, -10.0f), true);
-  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -10.0f),
-                              glm::vec3(2.0f, 3.0f, -10.0f), true);
-
-  renderer->renderRectangle("tileTexture", glm::vec3(-2.0f, 7.0f, -6.0f),
-			    glm::vec3(2.0f, 7.0f, -10.0f), true);
-  */
   renderer->swapBuffers();
-  
+
 }

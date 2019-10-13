@@ -7,8 +7,9 @@
  */
 #pragma once
 
-#include <small3d/Renderer.hpp>
 #include "Map.hpp"
+#include <small3d/Renderer.hpp>
+#include <small3d/Model.hpp>
 
 class Game {
 
@@ -18,7 +19,8 @@ private:
   int posY;
   small3d::Renderer *renderer;
   Map map;
-  void renderEnv();
+  small3d::Model cube;
+  void renderEnv(int radius);
 
 public:
   Game();
