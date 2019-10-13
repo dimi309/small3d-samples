@@ -19,6 +19,9 @@ private:
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
+  
+  const int xMapSize = 29;
+  const int yMapSize = 11;
 
   glm::ivec2 playerCoords = glm::ivec2(0, 0);
   glm::vec2 playerPosition = glm::vec2(0.0f, 0.0f);

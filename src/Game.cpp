@@ -29,9 +29,7 @@ Game::Game() {
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = 3.2f;
- // renderer->cameraPosition.x = 22.2f;
-  renderer->cameraRotation.y = 1.7f;
- // renderer->cameraPosition.z = 4.0f;
+ 
 }
 
 GLFWwindow* Game::getWindow() {
@@ -49,16 +47,11 @@ void Game::process(const KeyInput &input) {
   if (input.left) {
     renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
     
-   
-    
     if (renderer->cameraRotation.y < -FULL_ROTATION)
       renderer->cameraRotation.y = 0.0f;
     
-    
   } else if (input.right) {
     renderer->cameraRotation.y += CAMERA_ROTATION_SPEED;
-    
-    
     
     if (renderer->cameraRotation.y > FULL_ROTATION)
       renderer->cameraRotation.y = 0.0f;
@@ -70,23 +63,67 @@ void Game::process(const KeyInput &input) {
     renderer->cameraPosition.x += sin(renderer->cameraRotation.y) * CAMERA_SPEED;
     renderer->cameraPosition.z -= cos(renderer->cameraRotation.y) * CAMERA_SPEED;
     
-    
-    
   } else if (input.down) {
     renderer->cameraPosition.x -= sin(renderer->cameraRotation.y) * CAMERA_SPEED;
     renderer->cameraPosition.z += cos(renderer->cameraRotation.y) * CAMERA_SPEED;
-    
-    
   }
   
+  if (renderer->cameraPosition.x < 0.0f ) {
+    
+    if (playerCoords.x > 0) {
+      --playerCoords.x;
+      renderer->cameraPosition.x = 10.0f;
+    }
+    else {
+      renderer->cameraPosition.x = 0.0f;
+    }
+  }
   
+  if (renderer->cameraPosition.x > 10.0f ) {
+    if (playerCoords.x < xMapSize) {
+      ++playerCoords.x;
+      renderer->cameraPosition.x = 0.0f;
+    }
+    else {
+      renderer->cameraPosition.x = 10.0f;
+    }
+  }
   
+  if (renderer->cameraPosition.z > 10.0f ) {
+    
+    if (playerCoords.y < yMapSize) {
+      ++playerCoords.y;
+      renderer->cameraPosition.z = 0.0f;
+    }
+    else {
+      renderer->cameraPosition.z = 10.0f;
+    }
+  }
   
+  if (renderer->cameraPosition.z < -10.0f ) {
+    
+    if (playerCoords.y > 0) {
+      --playerCoords.y;
+      renderer->cameraPosition.z = 0.0f;
+    }
+    else {
+      renderer->cameraPosition.z = -10.0f;
+    }
+  }
 }
 
 void Game::renderEnv(int radius) {
+  
+  int regCenterX = playerCoords.x;
+  int regCenterY = playerCoords.y;
+  
+  if (regCenterX < radius) regCenterX = radius;
+  if (regCenterY < radius) regCenterY = radius;
+  
+  if (regCenterX > xMapSize - radius) regCenterX = xMapSize - radius;
+  if (regCenterY > yMapSize - radius) regCenterY = yMapSize -radius;
 
-  const char* region = map.getRegion(2, 2, radius);
+  const char* region = map.getRegion(regCenterX, regCenterY, radius);
 
   int length = 2 * radius + 1;
 
@@ -118,6 +155,16 @@ void Game::renderEnv(int radius) {
 
 void Game::render() {
   renderEnv(2);
+  
+  std::string cameraPosStr = "x: ";
+  cameraPosStr += floatToStr(renderer->cameraPosition.x);
+  cameraPosStr += " z: ";
+  cameraPosStr += floatToStr(renderer->cameraPosition.z);
+  
+  renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
+                  glm::vec2(0.4f, -0.9f), glm::vec2(1.0f, -1.0f));
+  
   renderer->swapBuffers();
+  
 
 }
