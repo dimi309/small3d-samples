@@ -16,7 +16,10 @@
 using namespace small3d;
 
 Game::Game() {
-
+  
+  manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
+  manRunning->offset = glm::vec3(1.0f, 3.0f, -3.0f);
+  manRunning->startAnimating();
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Groom", 800, 600, 1.0f,
@@ -30,6 +33,10 @@ Game::Game() {
 
   renderer->cameraPosition.y = 3.2f;
  
+}
+
+Game::~Game() {
+  delete manRunning;
 }
 
 GLFWwindow* Game::getWindow() {
@@ -73,7 +80,7 @@ void Game::process(const KeyInput &input) {
     if (playerCoords.x > 0 &&
         map.getLocation(playerCoords.x - 1, playerCoords.y) != '#') {
       --playerCoords.x;
-      renderer->cameraPosition.x = 0.0f;
+      renderer->cameraPosition.x = 4.0f;
     }
     else {
       renderer->cameraPosition.x = -4.0f;
@@ -84,7 +91,7 @@ void Game::process(const KeyInput &input) {
     if (playerCoords.x < xMapSize - 1 &&
     map.getLocation(playerCoords.x + 1, playerCoords.y) != '#') {
       ++playerCoords.x;
-      renderer->cameraPosition.x = 0.0f;
+      renderer->cameraPosition.x = -4.0f;
     }
     else {
       renderer->cameraPosition.x = 4.0f;
@@ -96,7 +103,7 @@ void Game::process(const KeyInput &input) {
     if (playerCoords.y < yMapSize - 1 &&
     map.getLocation(playerCoords.x, playerCoords.y + 1) != '#') {
       ++playerCoords.y;
-      renderer->cameraPosition.z = 0.0f;
+      renderer->cameraPosition.z = -4.0f;
     }
     else {
       renderer->cameraPosition.z = 4.0f;
@@ -108,12 +115,14 @@ void Game::process(const KeyInput &input) {
     if (playerCoords.y > 0 &&
     map.getLocation(playerCoords.x, playerCoords.y - 1) != '#') {
       --playerCoords.y;
-      renderer->cameraPosition.z = 0.0f;
+      renderer->cameraPosition.z = 4.0f;
     }
     else {
       renderer->cameraPosition.z = -4.0f;
     }
   }
+  
+  manRunning->animate();
 }
 
 void Game::renderEnv(int radius) {
@@ -153,8 +162,10 @@ void Game::renderEnv(int radius) {
 void Game::render() {
   renderEnv(2);
   
-  std::string cameraPosStr = "x: ";
-  /*cameraPosStr += floatToStr(renderer->cameraPosition.x);
+  renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+  
+  /*std::string cameraPosStr = "x: ";
+  cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
   cameraPosStr += " coordX: " + intToStr(playerCoords.x);

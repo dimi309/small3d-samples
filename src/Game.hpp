@@ -11,6 +11,7 @@
 #include <small3d/Renderer.hpp>
 #include <small3d/Model.hpp>
 #include "KeyInput.hpp"
+#include <small3d/SceneObject.hpp>
 
 class Game {
 
@@ -26,10 +27,15 @@ private:
   glm::ivec2 playerCoords = glm::ivec2(3, 3);
   glm::vec2 playerPosition = glm::vec2(0.0f, 0.0f);
   
+  small3d::SceneObject *manRunning;
+  
   void renderEnv(int radius);
+  
+  
 
 public:
   Game();
+  ~Game();
   GLFWwindow* getWindow();
   void init();
   void terminate();
