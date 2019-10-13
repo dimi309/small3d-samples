@@ -10,16 +10,19 @@
 #include "Map.hpp"
 #include <small3d/Renderer.hpp>
 #include <small3d/Model.hpp>
+#include "KeyInput.hpp"
 
 class Game {
 
 private:
 
-  int posX;
-  int posY;
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
+
+  glm::vec2i
+  glm::vec2 playerPosition = glm::vec2(0.0f, 0.0f);
+  
   void renderEnv(int radius);
 
 public:
@@ -27,6 +30,6 @@ public:
   GLFWwindow* getWindow();
   void init();
   void terminate();
-  void process();
+  void process(const KeyInput &input);
   void render();
 };

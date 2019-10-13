@@ -40,37 +40,9 @@ void Game::init() {
 void Game::terminate() {
 }
 
-void Game::process() {
-  /*if (mapfile.is_open()) mapfile.close();
-
-posX = 0;
-posY = 0;
-
-char c;
-while ((c = getchar()) != 27) {
-  switch(c) {
-  case 'q':
-    posX--;
-    break;
-  case 'd':
-    posX++;
-    break;
-  case 'z':
-    ++posY;
-    break;
-  case 's':
-    --posY;
-    break;
-  default:
-    //do nothing
-    break;
-  }
-  render();
+void Game::process(const KeyInput &input) {
+  
 }
-*/
-}
-
-
 
 void Game::renderEnv(int radius) {
 
@@ -106,7 +78,6 @@ void Game::renderEnv(int radius) {
 
 void Game::render() {
   renderEnv(2);
-  
   renderer->swapBuffers();
 
 }
