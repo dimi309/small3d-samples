@@ -20,7 +20,7 @@ private:
   Map map;
   small3d::Model cube;
 
-  glm::vec2i
+  glm::ivec2 playerCoords = glm::ivec2(0, 0);
   glm::vec2 playerPosition = glm::vec2(0.0f, 0.0f);
   
   void renderEnv(int radius);

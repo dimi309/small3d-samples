@@ -13,6 +13,8 @@ KeyInput input;
 
 bool downkey, leftkey, rightkey, upkey, esckey, enterkey;
 
+const uint32_t framerate = 60;
+
 void keyCallback(GLFWwindow* window, int key, int scancode, int action,
 		 int mods) {
   if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
@@ -50,13 +52,24 @@ int main(int argc, char** argv) {
 
   glfwSetKeyCallback(window, keyCallback);
   
+  double seconds = glfwGetTime();
+  double prevSeconds = seconds;
+  double secondsInterval = 1.0 / framerate;
+  
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
-    game.render();
-    if (input.esc) {
-      break;
+    
+    seconds = glfwGetTime();
+    if (seconds - prevSeconds > secondsInterval) {
+      
+      game.process(input);
+      game.render();
+      
+      if (input.esc) {
+        break;
+      }
     }
-  }  
+  }
   
   return 0;
 }

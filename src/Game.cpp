@@ -9,6 +9,10 @@
 #include "Game.hpp"
 #include <small3d/Logger.hpp>
 
+#define FULL_ROTATION 6.28f // More or less 360 degrees in radians
+#define CAMERA_ROTATION_SPEED 0.1f
+#define CAMERA_SPEED 0.65f
+
 using namespace small3d;
 
 Game::Game() {
@@ -16,7 +20,7 @@ Game::Game() {
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Groom", 800, 600, 1.0f,
-    1.0f, 24.0f, -1.0f, "resources/shaders/", 240);
+    1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
 
@@ -41,6 +45,42 @@ void Game::terminate() {
 }
 
 void Game::process(const KeyInput &input) {
+  
+  if (input.left) {
+    renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
+    
+   
+    
+    if (renderer->cameraRotation.y < -FULL_ROTATION)
+      renderer->cameraRotation.y = 0.0f;
+    
+    
+  } else if (input.right) {
+    renderer->cameraRotation.y += CAMERA_ROTATION_SPEED;
+    
+    
+    
+    if (renderer->cameraRotation.y > FULL_ROTATION)
+      renderer->cameraRotation.y = 0.0f;
+    
+  }
+  
+  if (input.up) {
+    
+    renderer->cameraPosition.x += sin(renderer->cameraRotation.y) * CAMERA_SPEED;
+    renderer->cameraPosition.z -= cos(renderer->cameraRotation.y) * CAMERA_SPEED;
+    
+    
+    
+  } else if (input.down) {
+    renderer->cameraPosition.x -= sin(renderer->cameraRotation.y) * CAMERA_SPEED;
+    renderer->cameraPosition.z += cos(renderer->cameraRotation.y) * CAMERA_SPEED;
+    
+    
+  }
+  
+  
+  
   
 }
 
