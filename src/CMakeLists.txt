@@ -1,4 +1,4 @@
-add_executable(groom main.cpp Game.cpp Map.cpp KeyInput.hpp Game.hpp Map.hpp)
+add_executable(groom main.cpp Game.cpp Map.cpp Enemy.cpp KeyInput.hpp Game.hpp Map.hpp Enemy.hpp)
 
 target_include_directories(groom PUBLIC
   ${SMALL3D_INCLUDE_DIR}
