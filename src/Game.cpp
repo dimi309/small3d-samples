@@ -18,7 +18,7 @@ using namespace small3d;
 Game::Game() {
   
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
-  manRunning->offset = glm::vec3(1.0f, 3.0f, -3.0f);
+  manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
   small3d::initLogger();
 
@@ -31,7 +31,7 @@ Game::Game() {
 
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
-  renderer->cameraPosition.y = 3.2f;
+  renderer->cameraPosition.y = -0.1f;
  
 }
 
