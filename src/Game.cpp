@@ -140,8 +140,8 @@ void Game::renderEnv(int radius) {
          
           for (int idx = 0; idx < 3; ++idx) {
             // top
-            renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, 3.0f, -18.0f + y * 12.0f - didx * 4),
-              glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+            // renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, 3.0f, -18.0f + y * 12.0f - didx * 4),
+            //  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
             // bottom
             renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, -1.0f, -18.0f + y * 12.0f - didx * 4),
               glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
@@ -149,8 +149,8 @@ void Game::renderEnv(int radius) {
         }
       }
       else {
-        renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, 7.0f, 6.0f - (2 - y) * 12.0f),
-          glm::vec3(-18.0f + x * 12.0f, 7.0f, -6.0f - (2 - y) * 12.0f), true);
+        renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, 3.0f, 6.0f - (2 - y) * 12.0f),
+          glm::vec3(-18.0f + x * 12.0f, 3.0f, -6.0f - (2 - y) * 12.0f), true);
         renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, -1.0f, -6.0f - (2 - y) * 12.0f),
           glm::vec3(-18.0f + x * 12.0f, -1.0f, 6.0f - (2 - y) * 12.0f), true);
       }
