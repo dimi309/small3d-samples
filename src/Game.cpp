@@ -8,6 +8,7 @@
 
 #include "Game.hpp"
 #include <small3d/Logger.hpp>
+#include <cmath>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.1f
@@ -32,6 +33,9 @@ Game::Game() {
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = -0.1f;
+  
+  enemy.coords = glm::ivec2(5,5);
+  enemy.position = glm::vec2(1.0f, 1.0f);
  
 }
 
@@ -160,9 +164,22 @@ void Game::renderEnv(int radius) {
 }
 
 void Game::render() {
-  renderEnv(2);
+  int radius = 2;
   
-  renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+  renderEnv(radius);
+  
+  int diffxcoords = playerCoords.x - enemy.coords.x;
+  int diffycoords = playerCoords.y - enemy.coords.y;
+  
+  if (round(sqrt(pow(diffxcoords, 2.0f) + pow(diffycoords, 2.0f))) < 2 * radius)  {
+    manRunning->offset.x = diffxcoords * 8.0f + enemy.position.x;
+    manRunning->offset.z = diffycoords *0.8f + enemy.position.y;
+    
+    renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+  }
+  
+  
+  
   
   /*std::string cameraPosStr = "x: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.x);

@@ -12,12 +12,9 @@
 
 class Enemy {
 
-private:
-
+public:
   glm::ivec2 coords = glm::ivec2(0, 0);
   glm::vec2 position = glm::vec2(0.0f, 0.0f);
-
-public:
   Enemy();
 
 
