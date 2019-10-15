@@ -233,18 +233,24 @@ void Game::render() {
     
     if (enemy.diffxcoords < 0 || (enemy.diffxcoords == 0 && renderer->cameraPosition.x - enemy.position.x < 0)) {
       manRunning->rotation.y = 1.7f;
-      ycoeff = -1;
+      if (abs(enemy.diffxcoords) <= abs(enemy.diffycoords)) {
+        ycoeff = -1;
+      }
     }
     else {
       manRunning->rotation.y = -1.7f;
-      ycoeff = 1;
+      if (abs(enemy.diffxcoords) <= abs(enemy.diffycoords)) {
+        ycoeff = 1;
+      }
     }
     
+    
+    
     if (enemy.diffycoords < 0 || (enemy.diffycoords == 0 && renderer->cameraPosition.z - enemy.position.y < 0)) {
-      manRunning->rotation.y -= ycoeff * 0.5f;
+      manRunning->rotation.y -= ycoeff * 0.85f;
     }
     else {
-      manRunning->rotation.y += ycoeff * 0.5f;
+      manRunning->rotation.y += ycoeff * 0.85f;
     }
   
   
@@ -262,6 +268,12 @@ void Game::render() {
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
                   glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
   */
+  
+  
+  renderer->write(floatToStr(glm::dot(glm::vec2(-sin(renderer->cameraRotation.y), cos(renderer->cameraRotation.y)),
+  glm::vec2(-sin(manRunning->rotation.y), cos(manRunning->rotation.y)))), glm::vec3(1.0f, 1.0f, 1.0f),
+                  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+  
   
   renderer->swapBuffers();
   
