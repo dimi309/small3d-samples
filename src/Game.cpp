@@ -52,7 +52,13 @@ Game::Game() {
   enemy.position = glm::vec2(1.0f, 1.0f);
   enemies.push_back(enemy);
   
+  enemy.coords = glm::ivec2(10,10);
+   enemy.position = glm::vec2(1.0f, 1.0f);
+   enemies.push_back(enemy);
   
+  enemy.coords = glm::ivec2(8,7);
+   enemy.position = glm::vec2(1.0f, 1.0f);
+   enemies.push_back(enemy);
  
 }
 
@@ -150,7 +156,7 @@ void Game::process(const KeyInput &input) {
     }
   }
   
-  
+  bool killedOne = false;
   
   for(std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
   int diffxcoords = playerCoords.x - enemy->coords.x;
@@ -158,7 +164,6 @@ void Game::process(const KeyInput &input) {
   
   if (!enemy->dead) {
   
-    
     if (abs(diffxcoords) > 0) {
       enemy->position.x = enemy->position.x +
       ENEMY_SPEED * abs(diffxcoords) / diffxcoords;
@@ -207,12 +212,11 @@ void Game::process(const KeyInput &input) {
     float distanceY = enemy->diffycoords * 8.0f + enemy->position.y - renderer->cameraPosition.y;
     enemy->dotp = distanceX * cos(renderer->cameraRotation.x) + distanceY *sin(renderer->cameraRotation.y);
     
-    if (abs(enemy->dotp) < 10.0f && shootCount == SHOOT_DURATION){
+    if (abs(enemy->dotp) < 40.0f && shootCount > 0 && !killedOne){
       enemy->dead = true;
-      
+      killedOne = true;
     }
   }
-  
   
 }
 
@@ -283,11 +287,14 @@ void Game::render() {
     if (enemy->dead) {
       manRunning->rotation.x = 1.75f;
       manRunning->offset.y = -0.9;
-      manRunning->resetAnimation();
+      manRunning->stopAnimating();
     }
     else {
+      manRunning->rotation.x = 0.0f;
+      manRunning->startAnimating();
       manRunning->animate();
     }
+    
   
     renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
   }
