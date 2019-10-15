@@ -13,6 +13,8 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.1f
 #define CAMERA_SPEED 0.95f
+#define ENEMY_SPEED 0.3f
+#define TOUCH_DISTANCE 1.4f
 
 using namespace small3d;
 
@@ -127,6 +129,51 @@ void Game::process(const KeyInput &input) {
   }
   
   manRunning->animate();
+  
+  
+  int diffxcoords = playerCoords.x - enemy.coords.x;
+  int diffycoords = playerCoords.y - enemy.coords.y;
+  
+  if (abs(diffxcoords) > 0) {
+    enemy.position.x = enemy.position.x +
+    ENEMY_SPEED * abs(diffxcoords) / diffxcoords;
+    if (enemy.position.x < -4.0f) {
+      --enemy.coords.x;
+      enemy.position.x = 4.0f;
+    }
+    if (enemy.position.x > 4.0f) {
+      ++enemy.coords.x;
+      enemy.position.x = -4.0f;
+    }
+  }
+  else {
+    float diffx = renderer->cameraPosition.x - enemy.position.x;
+    if (abs(diffx) > TOUCH_DISTANCE) {
+      enemy.position.x += ENEMY_SPEED * abs(diffx)/diffx;
+      
+    }
+  }
+  
+  if (abs(diffycoords) > 0) {
+    enemy.position.y = enemy.position.y +
+    ENEMY_SPEED * abs(diffycoords) / diffycoords;
+    if (enemy.position.y < -4.0f) {
+      --enemy.coords.y;
+      enemy.position.y = 4.0f;
+    }
+    if (enemy.position.y > 4.0f) {
+      ++enemy.coords.y;
+      enemy.position.y = -4.0f;
+    }
+  }
+  else {
+    float diffy = renderer->cameraPosition.z - enemy.position.y;
+    if (abs(diffy) > TOUCH_DISTANCE ) {
+      enemy.position.y += ENEMY_SPEED * abs(diffy)/diffy;
+      
+    }
+  }
+  
 }
 
 void Game::renderEnv(int radius) {
@@ -174,10 +221,30 @@ void Game::render() {
   if (pow(diffxcoords, 2) + pow(diffycoords, 2) < 2 * pow(radius, 2)) {
     manRunning->offset.x = -diffxcoords * 8.0f + enemy.position.x;
     manRunning->offset.z = -diffycoords * 8.0f + enemy.position.y;
+    
+    int ycoeff = 0;
+    
+    if (diffxcoords < 0 || (diffxcoords == 0 && renderer->cameraPosition.x - enemy.position.x < 0)) {
+      manRunning->rotation.y = 1.7f;
+      ycoeff = -1;
+    }
+    else {
+      manRunning->rotation.y = -1.7f;
+      ycoeff = 1;
+    }
+    
+    if (diffycoords < 0 || (diffycoords == 0 && renderer->cameraPosition.z - enemy.position.y < 0)) {
+      manRunning->rotation.y -= ycoeff * 0.5f;
+    }
+    else {
+      manRunning->rotation.y += ycoeff * 0.5f;
+    }
+  
+  
     renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
   }
   
-  std::string cameraPosStr = "x: ";
+  /*std::string cameraPosStr = "x: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
@@ -187,7 +254,7 @@ void Game::render() {
   
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
                   glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
-  
+  */
   renderer->swapBuffers();
   
 }
