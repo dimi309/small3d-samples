@@ -16,9 +16,11 @@ public:
   glm::ivec2 coords = glm::ivec2(0, 0);
   glm::vec2 position = glm::vec2(0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  float dotp = 0.0f;
   int diffxcoords = 0;
   int diffycoords = 0;
   bool inRange = false;
+  bool dead = false;
   Enemy();
 
 

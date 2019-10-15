@@ -13,6 +13,7 @@
 #include "KeyInput.hpp"
 #include <small3d/SceneObject.hpp>
 #include "Enemy.hpp"
+#include <vector>;
 
 class Game {
 
@@ -32,8 +33,8 @@ private:
   small3d::SceneObject *manRunning;
   
   void renderEnv();
+  std::vector<Enemy> enemies;
   
-  Enemy enemy;
 
 public:
   Game();
