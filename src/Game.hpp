@@ -21,6 +21,8 @@ private:
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
+  const int localCoordRadius = 2;
+  int shootCount = 0;
   
   const int xMapSize = 29;
   const int yMapSize = 11;
@@ -29,7 +31,7 @@ private:
   
   small3d::SceneObject *manRunning;
   
-  void renderEnv(int radius);
+  void renderEnv();
   
   Enemy enemy;
 

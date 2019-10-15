@@ -29,6 +29,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action,
     input.esc = true;
   if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
     input.enter = true;
+  if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+    input.space = true;
   if (key == GLFW_KEY_DOWN && action == GLFW_RELEASE)
     input.down = false;
   if (key == GLFW_KEY_UP && action == GLFW_RELEASE)
@@ -41,6 +43,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action,
     input.esc = false;
   if (key == GLFW_KEY_ENTER && action == GLFW_RELEASE)
     input.enter = false;
+  if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+    input.space = false;
+  
+  
   
 }
 

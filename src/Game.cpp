@@ -57,6 +57,13 @@ void Game::terminate() {
 
 void Game::process(const KeyInput &input) {
   
+  if (input.space) {
+    shootCount = 4;
+  }
+  else if (shootCount) {
+    --shootCount;
+  }
+  
   if (input.left) {
     renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
     
@@ -174,13 +181,17 @@ void Game::process(const KeyInput &input) {
     }
   }
   
+  enemy.diffxcoords = playerCoords.x - enemy.coords.x;
+  enemy.diffycoords = playerCoords.y - enemy.coords.y;
+  enemy.inRange = pow(enemy.diffxcoords, 2) + pow(enemy.diffycoords, 2) < 2 * pow(localCoordRadius, 2);
+  
 }
 
-void Game::renderEnv(int radius) {
+void Game::renderEnv() {
   
-  const char* region = map.getRegion(playerCoords.x, playerCoords.y, radius);
+  const char* region = map.getRegion(playerCoords.x, playerCoords.y, localCoordRadius);
 
-  int length = 2 * radius + 1;
+  int length = 2 * localCoordRadius + 1;
 
   for (int y = 0; y < length; ++y) {
     for (int x = 0; x < length; ++x) {
@@ -211,20 +222,16 @@ void Game::renderEnv(int radius) {
 }
 
 void Game::render() {
-  int radius = 2;
   
-  renderEnv(radius);
+  renderEnv();
   
-  int diffxcoords = playerCoords.x - enemy.coords.x;
-  int diffycoords = playerCoords.y - enemy.coords.y;
-  
-  if (pow(diffxcoords, 2) + pow(diffycoords, 2) < 2 * pow(radius, 2)) {
-    manRunning->offset.x = -diffxcoords * 8.0f + enemy.position.x;
-    manRunning->offset.z = -diffycoords * 8.0f + enemy.position.y;
+  if (enemy.inRange) {
+    manRunning->offset.x = -enemy.diffxcoords * 8.0f + enemy.position.x;
+    manRunning->offset.z = -enemy.diffycoords * 8.0f + enemy.position.y;
     
     int ycoeff = 0;
     
-    if (diffxcoords < 0 || (diffxcoords == 0 && renderer->cameraPosition.x - enemy.position.x < 0)) {
+    if (enemy.diffxcoords < 0 || (enemy.diffxcoords == 0 && renderer->cameraPosition.x - enemy.position.x < 0)) {
       manRunning->rotation.y = 1.7f;
       ycoeff = -1;
     }
@@ -233,7 +240,7 @@ void Game::render() {
       ycoeff = 1;
     }
     
-    if (diffycoords < 0 || (diffycoords == 0 && renderer->cameraPosition.z - enemy.position.y < 0)) {
+    if (enemy.diffycoords < 0 || (enemy.diffycoords == 0 && renderer->cameraPosition.z - enemy.position.y < 0)) {
       manRunning->rotation.y -= ycoeff * 0.5f;
     }
     else {
@@ -255,6 +262,7 @@ void Game::render() {
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
                   glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
   */
+  
   renderer->swapBuffers();
   
 }
