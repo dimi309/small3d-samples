@@ -171,25 +171,23 @@ void Game::render() {
   int diffxcoords = playerCoords.x - enemy.coords.x;
   int diffycoords = playerCoords.y - enemy.coords.y;
   
-  if (round(sqrt(pow(diffxcoords, 2.0f) + pow(diffycoords, 2.0f))) < 2 * radius)  {
-    manRunning->offset.x = diffxcoords * 8.0f + enemy.position.x;
-    manRunning->offset.z = diffycoords *0.8f + enemy.position.y;
-    
+  if (pow(diffxcoords, 2) + pow(diffycoords, 2) < 2 * pow(radius, 2)) {
+    manRunning->offset.x = -diffxcoords * 8.0f + enemy.position.x;
+    manRunning->offset.z = -diffycoords * 8.0f + enemy.position.y;
     renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
   }
   
-  
-  
-  
-  /*std::string cameraPosStr = "x: ";
+  std::string cameraPosStr = "x: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.x);
   cameraPosStr += " z: ";
   cameraPosStr += floatToStr(renderer->cameraPosition.z);
   cameraPosStr += " coordX: " + intToStr(playerCoords.x);
   cameraPosStr += " coordY: " + intToStr(playerCoords.y);
+  cameraPosStr += " difx: " + intToStr(diffxcoords) + " dify: " + intToStr(diffycoords);
+  
   renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-                  glm::vec2(0.2f, -0.8f), glm::vec2(1.0f, -1.0f));
-  */
+                  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+  
   renderer->swapBuffers();
   
 }
