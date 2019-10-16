@@ -14,6 +14,7 @@
 #include <small3d/SceneObject.hpp>
 #include "Enemy.hpp"
 #include <vector>
+#include <small3d/Sound.hpp>
 
 class Game {
 
@@ -31,6 +32,10 @@ private:
   glm::ivec2 playerCoords = glm::ivec2(3, 3);
   
   small3d::SceneObject *manRunning;
+  small3d::SceneObject *gun;
+  small3d::Sound gunshot;
+
+
   
   void renderEnv();
   std::vector<Enemy> enemies;

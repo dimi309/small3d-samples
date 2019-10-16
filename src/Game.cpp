@@ -24,6 +24,9 @@ Game::Game() {
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
+
+  gun = new SceneObject("gun", "resources/gun.obj");
+
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Groom", 800, 600, 1.0f,
@@ -60,10 +63,13 @@ Game::Game() {
   enemy.position = glm::vec2(1.0f, 1.0f);
   enemies.push_back(enemy);
 
+  gunshot = Sound("resources/sounds/0438.ogg");
+
 }
 
 Game::~Game() {
   delete manRunning;
+  delete gun;
 }
 
 GLFWwindow* Game::getWindow() {
@@ -158,6 +164,14 @@ void Game::process(const KeyInput& input) {
     }
   }
 
+  gun->rotation = renderer->cameraRotation;
+  gun->rotation.x += shootCount * 0.3f;
+  gun->offset = renderer->cameraPosition;
+  gun->offset.y -= 0.9f;
+  gun->offset.x += sin(renderer->cameraRotation.y) * 1.3f;
+  gun->offset.z -= cos(renderer->cameraRotation.y) * 1.3f;
+  
+
   for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
     int diffxcoords = playerCoords.x - enemy->coords.x;
     int diffycoords = playerCoords.y - enemy->coords.y;
@@ -211,13 +225,12 @@ void Game::process(const KeyInput& input) {
 
     float distanceX = renderer->cameraPosition.x - enemy->position.x + enemy->diffxcoords * 8.0f;
     float distanceY = renderer->cameraPosition.z - enemy->position.y + enemy->diffycoords * 8.0f;
-    enemy->dotp = -distanceY * sin(renderer->cameraRotation.y)  + distanceX * cos(renderer->cameraRotation.y);
+    enemy->dotp = -distanceY * sin(renderer->cameraRotation.y) + distanceX * cos(renderer->cameraRotation.y);
 
-    if (abs(enemy->dotp) < 4.0f && shootCount > 0) {
+    if (abs(enemy->dotp) < 3.0f && shootCount > 0) {
       enemy->dead = true;
     }
   }
-
 }
 
 void Game::renderEnv() {
@@ -257,8 +270,14 @@ void Game::renderEnv() {
 void Game::render() {
 
   renderEnv();
+  renderer->render(*gun, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+  if (shootCount == SHOOT_DURATION) {
+    gunshot.play();
+  }
+
   for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
-  //Enemy *enemy = &enemies[3];
+    //Enemy *enemy = &enemies[3];
     if (enemy->inRange) {
       manRunning->offset.x = -enemy->diffxcoords * 8.0f + enemy->position.x;
       manRunning->offset.z = -enemy->diffycoords * 8.0f + enemy->position.y;
@@ -311,8 +330,8 @@ void Game::render() {
                   glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
   */
 
-  renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+  /*renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
+    glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));*/
 
   renderer->swapBuffers();
 
