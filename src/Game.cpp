@@ -13,7 +13,7 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
-#define ENEMY_SPEED 0.3f
+#define ENEMY_SPEED 0.2f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -29,7 +29,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Groom", 800, 600, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Groom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");

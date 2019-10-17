@@ -1,6 +1,6 @@
-add_executable(groom main.cpp Game.cpp Map.cpp Enemy.cpp KeyInput.hpp Game.hpp Map.hpp Enemy.hpp)
+add_executable(gloom main.cpp Game.cpp Map.cpp Enemy.cpp KeyInput.hpp Game.hpp Map.hpp Enemy.hpp)
 
-target_include_directories(groom PUBLIC
+target_include_directories(gloom PUBLIC
   ${SMALL3D_INCLUDE_DIR}
   ${GLFW_INCLUDE_DIRS}
   ${Vulkan_INCLUDE_DIR}
@@ -12,7 +12,7 @@ target_include_directories(groom PUBLIC
   ${FREETYPE_INCLUDE_DIRS}
   )
 
-target_link_libraries(groom PUBLIC
+target_link_libraries(gloom PUBLIC
   ${SMALL3D_LIBRARY}
   ${GLFW_LIBRARIES}
   ${Vulkan_LIBRARIES}
@@ -24,28 +24,28 @@ target_link_libraries(groom PUBLIC
   )
 
 if(UNIX)
-  target_include_directories(groom PUBLIC
+  target_include_directories(gloom PUBLIC
     ${BZIP2_INCLUDE_DIRS})
-  target_link_libraries(groom PUBLIC
+  target_link_libraries(gloom PUBLIC
     ${BZIP2_LIBRARIES})
 endif(UNIX)
 
 if(WIN32)
-  target_link_libraries(groom PUBLIC winmm)
+  target_link_libraries(gloom PUBLIC winmm)
 endif(WIN32)
 
 if(APPLE)
-  set_target_properties(groom PROPERTIES LINK_FLAGS "-framework \
+  set_target_properties(gloom PROPERTIES LINK_FLAGS "-framework \
 AudioUnit -framework AudioToolbox -framework CoreAudio -framework Cocoa \
 -framework IOKit -framework CoreVideo")
 endif(APPLE)
 
 if(MSVC)
-  set_target_properties(groom PROPERTIES LINK_FLAGS_DEBUG
+  set_target_properties(gloom PROPERTIES LINK_FLAGS_DEBUG
     "-NODEFAULTLIB:LIBCMTD")
-  set_target_properties(groom PROPERTIES LINK_FLAGS_RELEASE
+  set_target_properties(gloom PROPERTIES LINK_FLAGS_RELEASE
     "-NODEFAULTLIB:LIBCMT")
   
-  set_target_properties(groom PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+  set_target_properties(gloom PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
     "${small3d_BINARY_DIR}/bin")
 endif(MSVC)
