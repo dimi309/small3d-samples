@@ -216,9 +216,9 @@ void Game::process(const KeyInput& input) {
         
         if (!enemy->dead) {
           bool touchx = false, touchy = false;
-          if (abs(diffxcoords) > 0) {
+          if (std::abs(diffxcoords) > 0) {
             enemy->position.x = enemy->position.x +
-            ENEMY_SPEED * abs(diffxcoords) / diffxcoords;
+	      ENEMY_SPEED * std::abs(diffxcoords) / diffxcoords;
             if (enemy->position.x < -4.0f) {
               --enemy->coords.x;
               enemy->position.x = 4.0f;
@@ -230,8 +230,8 @@ void Game::process(const KeyInput& input) {
           }
           else {
             float diffx = renderer->cameraPosition.x - enemy->position.x;
-            if (abs(diffx) > TOUCH_DISTANCE) {
-              enemy->position.x += ENEMY_SPEED * abs(diffx) / diffx;
+            if (std::abs(diffx) > TOUCH_DISTANCE) {
+              enemy->position.x += ENEMY_SPEED * std::abs(diffx) / diffx;
               
             }
             else {
@@ -239,9 +239,9 @@ void Game::process(const KeyInput& input) {
             }
           }
           
-          if (abs(diffycoords) > 0) {
+          if (std::abs(diffycoords) > 0) {
             enemy->position.y = enemy->position.y +
-            ENEMY_SPEED * abs(diffycoords) / diffycoords;
+	      ENEMY_SPEED * std::abs(diffycoords) / diffycoords;
             if (enemy->position.y < -4.0f) {
               --enemy->coords.y;
               enemy->position.y = 4.0f;
@@ -253,8 +253,8 @@ void Game::process(const KeyInput& input) {
           }
           else {
             float diffy = renderer->cameraPosition.z - enemy->position.y;
-            if (abs(diffy) > TOUCH_DISTANCE) {
-              enemy->position.y += ENEMY_SPEED * abs(diffy) / diffy;
+            if (std::abs(diffy) > TOUCH_DISTANCE) {
+              enemy->position.y += ENEMY_SPEED * std::abs(diffy) / diffy;
               
             }
             else {
@@ -275,7 +275,7 @@ void Game::process(const KeyInput& input) {
         float distanceY = renderer->cameraPosition.z - enemy->position.y + enemy->diffycoords * 8.0f;
         enemy->dotp = -distanceY * sin(renderer->cameraRotation.y) - distanceX * cos(renderer->cameraRotation.y);
         
-        if (!enemy->dead && abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
+        if (!enemy->dead && std::abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
           enemy->dead = true;
           killedOne = true;
           ++numDead;
@@ -348,13 +348,13 @@ void Game::render() {
         
         if (enemy->diffxcoords < 0 || (enemy->diffxcoords == 0 && renderer->cameraPosition.x - enemy->position.x < 0)) {
           manRunning->rotation.y = 1.7f;
-          if (abs(enemy->diffxcoords) <= abs(enemy->diffycoords)) {
+          if (std::abs(enemy->diffxcoords) <= std::abs(enemy->diffycoords)) {
             ycoeff = -1;
           }
         }
         else {
           manRunning->rotation.y = -1.7f;
-          if (abs(enemy->diffxcoords) <= abs(enemy->diffycoords)) {
+          if (std::abs(enemy->diffxcoords) <= std::abs(enemy->diffycoords)) {
             ycoeff = 1;
           }
         }
