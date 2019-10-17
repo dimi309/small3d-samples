@@ -13,7 +13,7 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
-#define ENEMY_SPEED 0.1f
+#define ENEMY_SPEED 0.2f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -22,7 +22,7 @@ using namespace small3d;
 Game::Game() {
 
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
-  manRunning->setFrameDelay(3);
+  //manRunning->setFrameDelay(3);
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
@@ -204,8 +204,8 @@ void Game::process(const KeyInput& input) {
       gun->rotation.x += shootCount * 0.3f;
       gun->offset = renderer->cameraPosition;
       gun->offset.y -= 0.9f;
-      gun->offset.x += sin(renderer->cameraRotation.y) * 1.3f;
-      gun->offset.z -= cos(renderer->cameraRotation.y) * 1.3f;
+      gun->offset.x += sin(renderer->cameraRotation.y) * 1.8f;
+      gun->offset.z -= cos(renderer->cameraRotation.y) * 1.8f;
       
       bool killedOne = false;
       
