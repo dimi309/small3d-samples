@@ -46,6 +46,7 @@ private:
   int numDead = 0;
   
   int dieCount = 0;
+  int winCount = 0;
   
 
 public:

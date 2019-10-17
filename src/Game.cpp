@@ -13,7 +13,7 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
-#define ENEMY_SPEED 0.2f
+#define ENEMY_SPEED 0.1f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -22,6 +22,7 @@ using namespace small3d;
 Game::Game() {
 
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
+  manRunning->setFrameDelay(3);
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
@@ -108,6 +109,15 @@ void Game::process(const KeyInput& input) {
       if (dieCount == 0) {
         died = true;
         terminate();
+      }
+    }
+    else if (winCount > 0) {
+      if (winCount >0) {
+	--winCount;
+	if (winCount == 0) {
+	  won = true;
+	  terminate();
+	}
       }
     }
     else {
@@ -270,8 +280,7 @@ void Game::process(const KeyInput& input) {
           killedOne = true;
           ++numDead;
           if (numDead == 5) {
-            won = true;
-            terminate();
+            winCount = 20;
           }
         }
       }
