@@ -40,6 +40,13 @@ private:
   void renderEnv();
   std::vector<Enemy> enemies;
   
+  bool died = false;
+  bool won = false;
+  
+  bool inMenu = true;
+  
+  int numDead = 0;
+  
 
 public:
   Game();
