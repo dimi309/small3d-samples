@@ -11,9 +11,9 @@
 #include <cmath>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
-#define CAMERA_ROTATION_SPEED 0.1f
+#define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
-#define ENEMY_SPEED 0.3f
+#define ENEMY_SPEED 0.1f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -78,6 +78,8 @@ GLFWwindow* Game::getWindow() {
 
 void Game::init() {
   
+  playerCoords = glm::ivec2(3, 3);
+  
   for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
     enemy->dead = false;
     enemy->position = glm::vec2(1.0f, 1.0f);
@@ -105,10 +107,8 @@ void Game::process(const KeyInput& input) {
       shootCount = SHOOT_DURATION;
       gunshot.play();
     }
-    else if (shootCount) {
-      --shootCount;
-    }
     
+        
     if (input.left) {
       renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
       
@@ -251,16 +251,22 @@ void Game::process(const KeyInput& input) {
       float distanceY = renderer->cameraPosition.z - enemy->position.y + enemy->diffycoords * 8.0f;
       enemy->dotp = -distanceY * sin(renderer->cameraRotation.y) - distanceX * cos(renderer->cameraRotation.y);
       
-      if (abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
+      if (!enemy->dead && abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
         enemy->dead = true;
         killedOne = true;
         ++numDead;
-        if (numDead == 6) {
+        if (numDead == 5) {
           won = true;
           terminate();
         }
       }
     }
+    
+    if (shootCount) {
+      --shootCount;
+    }
+
+    
   }
   else {
     if (input.enter) {
@@ -376,6 +382,11 @@ void Game::render() {
     if (won) {
       renderer->write("You won", glm::vec3(1.0f, 0.0f, 0.0f),
                       glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f));
+    } else if (died) {
+      
+        renderer->write("You died", glm::vec3(1.0f, 0.0f, 0.0f),
+                        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f));
+      
     }
   }
   renderer->swapBuffers();

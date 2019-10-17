@@ -34,8 +34,6 @@ private:
   small3d::SceneObject *manRunning;
   small3d::SceneObject *gun;
   small3d::Sound gunshot;
-
-
   
   void renderEnv();
   std::vector<Enemy> enemies;
