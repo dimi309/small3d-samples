@@ -401,6 +401,10 @@ void Game::render() {
                         glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f));
       
     }
+
+    renderer->write("Press enter to play, esc to quit",
+		    glm::vec3(1.0f, 0.0f, 0.0f),
+                        glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f));
   }
   renderer->swapBuffers();
   
