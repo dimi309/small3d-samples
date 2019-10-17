@@ -45,6 +45,8 @@ private:
   
   int numDead = 0;
   
+  int dieCount = 0;
+  
 
 public:
   Game();
