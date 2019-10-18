@@ -13,7 +13,11 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
+#ifdef __APPLE__
+#define ENEMY_SPEED 0.1f
+#else
 #define ENEMY_SPEED 0.2f
+#endif
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -22,7 +26,9 @@ using namespace small3d;
 Game::Game() {
 
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
-  //manRunning->setFrameDelay(3);
+#ifdef __APPLE__
+  manRunning->setFrameDelay(3);
+#endif
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
@@ -30,7 +36,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Groom", 0, 0, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
