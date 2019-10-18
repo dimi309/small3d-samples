@@ -13,11 +13,7 @@
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.2f
 #define CAMERA_SPEED 0.95f
-#ifdef __APPLE__
 #define ENEMY_SPEED 0.1f
-#else
-#define ENEMY_SPEED 0.2f
-#endif
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 4
 
@@ -37,7 +33,7 @@ Game::Game() {
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
-    1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
+					     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
 
@@ -322,7 +318,7 @@ void Game::renderEnv() {
               //  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
               // bottom
               renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, -1.0f, -18.0f + y * 12.0f - didx * 4),
-                               glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+                               glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
             }
           }
         }
@@ -338,7 +334,7 @@ void Game::renderEnv() {
 }
 
 void Game::render() {
-  
+  renderer->clearScreen();
   if (!inMenu) {
     
     renderEnv();
