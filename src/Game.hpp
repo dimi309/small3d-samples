@@ -23,13 +23,14 @@ private:
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
-  const int localCoordRadius = 3;
+  const int localCoordRadius = 2;
+  const float coord3dradius = 4.0f;
   int shootCount = 0;
   
-  const int xMapSize = 29;
-  const int yMapSize = 11;
+  int xMapSize;
+  int yMapSize;
 
-  glm::ivec2 playerCoords = glm::ivec2(3, 3);
+  glm::ivec2 playerCoords;
   
   small3d::SceneObject *manRunning;
   small3d::SceneObject *gun;

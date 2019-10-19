@@ -29,6 +29,7 @@ void Map::load(std::string filepath) {
     std::string line;
     while(std::getline(mapfile, line)) {
       mapData.push_back(line);
+      LOGDEBUG("Loaded: " + line);
     }
     LOGDEBUG("Loaded map.");
     mapfile.close();
@@ -48,7 +49,14 @@ const char* Map::getRegion(int coordx, int coordy, int radius) {
 
   for (int y = 0; y < dimension; ++y) {
     for (int x = 0; x < dimension; ++x) {
-      region[y * dimension + x] = mapData[coordy - radius + y][coordx - radius + x];
+      int yout = coordy - radius + y;
+      int xout = coordx - radius + x;
+      if (yout >= 0 && yout < mapData.size() && xout >= 0 && xout < mapData[0].size()) {
+        region[y * dimension + x] = mapData[coordy - radius + y][coordx - radius + x];
+      }
+      else {
+        region[y * dimension + x] = ' ';
+      }
     }
   }
   
@@ -57,4 +65,12 @@ const char* Map::getRegion(int coordx, int coordy, int radius) {
 
 char Map::getLocation(int coordx, int coordy) {
   return mapData[coordy][coordx];
+}
+
+int Map::getXsize() {
+  return mapData[0].size();
+}
+
+int Map::getYsize() {
+  return mapData.size();
 }

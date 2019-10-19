@@ -32,10 +32,13 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
-					     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
+  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
+					     1.0f, 60.0f, -1.0f, "resources/shaders/", 360);
 
   map.load("resources/map.txt");
+
+  xMapSize = map.getXsize();
+  yMapSize = map.getYsize();
 
   cube = Model("resources/cube.obj");
 
@@ -87,11 +90,11 @@ void Game::init() {
     enemy->dead = false;
     enemy->position = glm::vec2(1.0f, 1.0f);
   }
-  enemies[0].coords = glm::ivec2(5,5);
-  enemies[1].coords = glm::ivec2(5,7);
-  enemies[2].coords = glm::ivec2(5,9);
+  enemies[0].coords = glm::ivec2(7,7);
+  enemies[1].coords = glm::ivec2(8,8);
+  enemies[2].coords = glm::ivec2(9,9);
   enemies[3].coords = glm::ivec2(10,10);
-  enemies[4].coords = glm::ivec2(8,7);
+  enemies[4].coords = glm::ivec2(12,11);
   inMenu = false;
   died = false;
   won = false;
@@ -155,50 +158,50 @@ void Game::process(const KeyInput& input) {
         renderer->cameraPosition.z += cos(renderer->cameraRotation.y) * CAMERA_SPEED;
       }
       
-      if (renderer->cameraPosition.x < -4.0f) {
+      if (renderer->cameraPosition.x < -coord3dradius) {
         
         if (playerCoords.x > 0 &&
             map.getLocation(playerCoords.x - 1, playerCoords.y) != '#') {
           --playerCoords.x;
-          renderer->cameraPosition.x = 4.0f;
+          renderer->cameraPosition.x = coord3dradius;
         }
         else {
-          renderer->cameraPosition.x = -4.0f;
+          renderer->cameraPosition.x = -coord3dradius;
         }
       }
       
-      if (renderer->cameraPosition.x > 4.0f) {
+      if (renderer->cameraPosition.x > coord3dradius) {
         if (playerCoords.x < xMapSize - 1 &&
             map.getLocation(playerCoords.x + 1, playerCoords.y) != '#') {
           ++playerCoords.x;
-          renderer->cameraPosition.x = -4.0f;
+          renderer->cameraPosition.x = -coord3dradius;
         }
         else {
-          renderer->cameraPosition.x = 4.0f;
+          renderer->cameraPosition.x = coord3dradius;
         }
       }
       
-      if (renderer->cameraPosition.z > 4.0f) {
+      if (renderer->cameraPosition.z > coord3dradius) {
         
         if (playerCoords.y < yMapSize - 1 &&
             map.getLocation(playerCoords.x, playerCoords.y + 1) != '#') {
           ++playerCoords.y;
-          renderer->cameraPosition.z = -4.0f;
+          renderer->cameraPosition.z = -coord3dradius;
         }
         else {
-          renderer->cameraPosition.z = 4.0f;
+          renderer->cameraPosition.z = coord3dradius;
         }
       }
       
-      if (renderer->cameraPosition.z < -4.0f) {
+      if (renderer->cameraPosition.z < -coord3dradius) {
         
         if (playerCoords.y > 0 &&
             map.getLocation(playerCoords.x, playerCoords.y - 1) != '#') {
           --playerCoords.y;
-          renderer->cameraPosition.z = 4.0f;
+          renderer->cameraPosition.z = coord3dradius;
         }
         else {
-          renderer->cameraPosition.z = -4.0f;
+          renderer->cameraPosition.z = -coord3dradius;
         }
       }
       
@@ -221,13 +224,13 @@ void Game::process(const KeyInput& input) {
           if (std::abs(diffxcoords) > 0) {
             enemy->position.x = enemy->position.x +
 	      ENEMY_SPEED * std::abs(diffxcoords) / diffxcoords;
-            if (enemy->position.x < -4.0f) {
+            if (enemy->position.x < -coord3dradius) {
               --enemy->coords.x;
-              enemy->position.x = 4.0f;
+              enemy->position.x = coord3dradius;
             }
-            if (enemy->position.x > 4.0f) {
+            if (enemy->position.x > coord3dradius) {
               ++enemy->coords.x;
-              enemy->position.x = -4.0f;
+              enemy->position.x = -coord3dradius;
             }
           }
           else {
@@ -244,13 +247,13 @@ void Game::process(const KeyInput& input) {
           if (std::abs(diffycoords) > 0) {
             enemy->position.y = enemy->position.y +
 	      ENEMY_SPEED * std::abs(diffycoords) / diffycoords;
-            if (enemy->position.y < -4.0f) {
+            if (enemy->position.y < -coord3dradius) {
               --enemy->coords.y;
-              enemy->position.y = 4.0f;
+              enemy->position.y = coord3dradius;
             }
-            if (enemy->position.y > 4.0f) {
+            if (enemy->position.y > coord3dradius) {
               ++enemy->coords.y;
-              enemy->position.y = -4.0f;
+              enemy->position.y = -coord3dradius;
             }
           }
           else {
@@ -313,10 +316,7 @@ void Game::renderEnv() {
           for (int didx = 0; didx < 3; ++didx) {
             
             for (int idx = 0; idx < 3; ++idx) {
-              // top
-              // renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, 3.0f, -18.0f + y * 12.0f - didx * 4),
-              //  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
-              // bottom
+              
               renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, -1.0f, -18.0f + y * 12.0f - didx * 4),
                                glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
             }
@@ -383,17 +383,17 @@ void Game::render() {
       }
     }
     
-    /*std::string cameraPosStr = "x: ";
+    std::string cameraPosStr = "x: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.x);
      cameraPosStr += " z: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.z);
      cameraPosStr += " coordX: " + intToStr(playerCoords.x);
      cameraPosStr += " coordY: " + intToStr(playerCoords.y);
-     cameraPosStr += " difx: " + intToStr(diffxcoords) + " dify: " + intToStr(diffycoords);
+    
      
      renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
      glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
-     */
+     
     
     //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
     //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
