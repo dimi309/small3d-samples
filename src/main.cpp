@@ -46,8 +46,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action,
   if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
     input.space = false;
   
-  
-  
 }
 
 int main(int argc, char** argv) {
@@ -67,7 +65,7 @@ int main(int argc, char** argv) {
     
     seconds = glfwGetTime();
     if (seconds - prevSeconds > secondsInterval) {
-      
+      prevSeconds = seconds;
       game.process(input);
       game.render();
       
