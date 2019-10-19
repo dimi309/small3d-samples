@@ -23,7 +23,7 @@ private:
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
-  const int localCoordRadius = 2;
+  const int localCoordRadius = 3;
   int shootCount = 0;
   
   const int xMapSize = 29;
