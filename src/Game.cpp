@@ -91,10 +91,10 @@ void Game::init() {
     enemy->position = glm::vec2(1.0f, 1.0f);
   }
   enemies[0].coords = glm::ivec2(7,7);
-  enemies[1].coords = glm::ivec2(8,8);
-  enemies[2].coords = glm::ivec2(9,9);
-  enemies[3].coords = glm::ivec2(10,10);
-  enemies[4].coords = glm::ivec2(12,11);
+  enemies[1].coords = glm::ivec2(4,8);
+  enemies[2].coords = glm::ivec2(5,9);
+  enemies[3].coords = glm::ivec2(3,10);
+  enemies[4].coords = glm::ivec2(5,11);
   inMenu = false;
   died = false;
   won = false;
@@ -317,16 +317,17 @@ void Game::renderEnv() {
             
             for (int idx = 0; idx < 3; ++idx) {
               
-              renderer->render(cube, glm::vec3(-30.0f + x * 12.0f + 4 * idx, -1.0f, -18.0f + y * 12.0f - didx * 4),
+              renderer->render(cube, glm::vec3(-54.0f + x * 12.0f + 4 * idx, -1.0f, -42.0f + y * 12.0f - didx * 4),
                                glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
             }
           }
         }
         else {
-          renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, 3.0f, 6.0f - (2 - y) * 12.0f),
-                                    glm::vec3(-18.0f + x * 12.0f, 3.0f, -6.0f - (2 - y) * 12.0f), true);
-          renderer->renderRectangle("tileTexture", glm::vec3(-30.0f + x * 12.0f, -1.0f, -6.0f - (2 - y) * 12.0f),
-                                    glm::vec3(-18.0f + x * 12.0f, -1.0f, 6.0f - (2 - y) * 12.0f), true);
+          //todo: renderRectangle slows down the game considerably, only on my PC for some reason.
+          /*renderer->renderRectangle("tileTexture", glm::vec3(-54.0f + x * 12.0f, 3.0f, -18.0f - (2 - y) * 12.0f),
+            glm::vec3(-42.0f + x * 12.0f, 3.0f, -30.0f - (2 - y) * 12.0f), true);*/
+          renderer->renderRectangle("tileTexture", glm::vec3(-54.0f + x * 12.0f, -1.0f, -30.0f - (2 - y) * 12.0f),
+            glm::vec3(-42.0f + x * 12.0f, -1.0f, -18.0f - (2 - y) * 12.0f), true);
         }
       }
     }
@@ -334,14 +335,13 @@ void Game::renderEnv() {
 }
 
 void Game::render() {
-  renderer->clearScreen();
+  renderer->clearScreen(glm::vec4(0.0f, 0.0f, 0.2f, 1.0f));
   if (!inMenu) {
     
     renderEnv();
     renderer->render(*gun, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     
     for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
-      //Enemy *enemy = &enemies[3];
       if (enemy->inRange) {
         manRunning->offset.x = -enemy->diffxcoords * 8.0f + enemy->position.x;
         manRunning->offset.z = -enemy->diffycoords * 8.0f + enemy->position.y;
@@ -383,7 +383,7 @@ void Game::render() {
       }
     }
     
-    std::string cameraPosStr = "x: ";
+    /*std::string cameraPosStr = "x: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.x);
      cameraPosStr += " z: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.z);
@@ -392,7 +392,7 @@ void Game::render() {
     
      
      renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-     glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+     glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));*/
      
     
     //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
