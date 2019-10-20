@@ -23,6 +23,7 @@ private:
   small3d::Renderer *renderer;
   Map map;
   small3d::Model cube;
+  small3d::Model plane;
   const int localCoordRadius = 4;
   const float coord3dradius = 4.0f;
   int shootCount = 0;
@@ -34,6 +35,7 @@ private:
   
   small3d::SceneObject *manRunning;
   small3d::SceneObject *gun;
+
   small3d::Sound gunshot;
   
   void renderEnv();

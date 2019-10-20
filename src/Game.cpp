@@ -11,7 +11,7 @@
 #include <cmath>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
-#define CAMERA_ROTATION_SPEED 0.2f
+#define CAMERA_ROTATION_SPEED 0.1f
 #define CAMERA_SPEED 0.95f
 #define ENEMY_SPEED 0.1f
 #define TOUCH_DISTANCE 1.7f
@@ -22,9 +22,10 @@ using namespace small3d;
 Game::Game() {
 
   manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
-#ifdef __APPLE__
-  manRunning->setFrameDelay(3);
-#endif
+
+
+  manRunning->setFrameDelay(8);
+
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
@@ -41,7 +42,8 @@ Game::Game() {
   yMapSize = map.getYsize();
 
   cube = Model("resources/cube.obj");
-
+  plane = Model("resources/plane.obj");
+  
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = -0.1f;
@@ -310,32 +312,31 @@ void Game::renderEnv() {
   
   for (int y = 0; y < length; ++y) {
     for (int x = 0; x < length; ++x) {
-      if (y * length + x >= 0 && y * length + x < xMapSize * yMapSize) {
-        if (region[y * length + x] == '#') {
+        
           
-          for (int didx = 0; didx < 3; ++didx) {
-            
-            for (int idx = 0; idx < 3; ++idx) {
-              
-              renderer->render(cube, glm::vec3(-54.0f + x * 12.0f + 4 * idx, -1.0f, -42.0f + y * 12.0f - didx * 4),
-                               glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
-            }
-          }
-        }
-        else {
-          //todo: renderRectangle slows down the game considerably, only on my PC for some reason.
-          /*renderer->renderRectangle("tileTexture", glm::vec3(-54.0f + x * 12.0f, 3.0f, -18.0f - (2 - y) * 12.0f),
-            glm::vec3(-42.0f + x * 12.0f, 3.0f, -30.0f - (2 - y) * 12.0f), true);*/
-          renderer->renderRectangle("tileTexture", glm::vec3(-54.0f + x * 12.0f, -1.0f, -30.0f - (2 - y) * 12.0f),
-            glm::vec3(-42.0f + x * 12.0f, -1.0f, -18.0f - (2 - y) * 12.0f), true);
-        }
-      }
+              switch (region[y * length + x]) {
+              case '#':
+                //LOGINFO(floatToStr(-54.0f + x * 12.0f + 4 * idx) + " - " + floatToStr(-42.0f + y * 12.0f - didx * 4));
+                renderer->render(cube, glm::vec3(-54.0f + x * 12.0f, -1.2f, -42.0f + y * 12.0f),
+                  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+                break;
+              default:
+                renderer->render(plane, glm::vec3(-54.0f + x * 12.0f, -1.2f, -42.0f + y * 12.0f),
+                  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+                renderer->render(plane, glm::vec3(-54.0f + x * 12.0f, 2.8f, -42.0f + y * 12.0f),
+                  glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
+                //renderer->render(cube, glm::vec3(-54.0f + x * 12.0f + 4 * idx, -1.0f, -42.0f + y * 12.0f - didx * 4),
+                  //glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+                break;
+              }
+         
+        
     }
   }
 }
 
 void Game::render() {
-  renderer->clearScreen(glm::vec4(0.0f, 0.0f, 0.2f, 1.0f));
+  renderer->clearScreen();
   if (!inMenu) {
     
     renderEnv();
