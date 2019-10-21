@@ -11,11 +11,11 @@
 #include <cmath>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
-#define CAMERA_ROTATION_SPEED 0.1f
-#define CAMERA_SPEED 0.95f
+#define CAMERA_ROTATION_SPEED 0.02f
+#define CAMERA_SPEED 0.3f
 #define ENEMY_SPEED 0.1f
 #define TOUCH_DISTANCE 1.7f
-#define SHOOT_DURATION 4
+#define SHOOT_DURATION 12
 
 using namespace small3d;
 
@@ -128,7 +128,7 @@ void Game::process(const KeyInput& input) {
       }
     }
     else {
-      if (input.space) {
+      if (input.space && shootCount == 0) {
         shootCount = SHOOT_DURATION;
         gunshot.play();
       }
