@@ -27,7 +27,7 @@ private:
   const int localCoordRadius = 4;
   const float sectorRadius = 6.0f;
   const float sectorLength = 2 * sectorRadius;
-  const float enemySectorRadius = 4.0f;
+  const float enemySectorRadius = 6.0f;
 
   int shootCount = 0;
   

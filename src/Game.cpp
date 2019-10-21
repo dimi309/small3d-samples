@@ -11,8 +11,8 @@
 #include <cmath>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
-#define CAMERA_ROTATION_SPEED 0.02f
-#define CAMERA_SPEED 0.3f
+#define CAMERA_ROTATION_SPEED 0.08f
+#define CAMERA_SPEED 0.5f
 #define ENEMY_SPEED 0.05f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 12
@@ -33,7 +33,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
@@ -164,20 +164,24 @@ void Game::process(const KeyInput& input) {
         map.getLocation(playerCoords.x - 1, playerCoords.y) == '#') {
         renderer->cameraPosition.x = -sectorRadius + 2.0f;
       }
-      else if (renderer->cameraPosition.x < -sectorRadius) {
+      else if (renderer->cameraPosition.x < -sectorRadius && playerCoords.x > 0) {
         --playerCoords.x;
         renderer->cameraPosition.x = sectorRadius;
       }
-
-
+      else if (playerCoords.x <= 0) {
+        renderer->cameraPosition.x = -sectorRadius;
+      }
 
       if (renderer->cameraPosition.x > sectorRadius - 2.0f &&
         map.getLocation(playerCoords.x + 1, playerCoords.y) == '#') {
         renderer->cameraPosition.x = sectorRadius - 2.0f;
       }
-      else if (renderer->cameraPosition.x > sectorRadius) {
+      else if (renderer->cameraPosition.x > sectorRadius && playerCoords.x < xMapSize - 1) {
         ++playerCoords.x;
         renderer->cameraPosition.x = -sectorRadius;
+      }
+      else if (playerCoords.x >= xMapSize - 1) {
+        renderer->cameraPosition.x = sectorRadius;
       }
 
 
@@ -185,18 +189,24 @@ void Game::process(const KeyInput& input) {
         map.getLocation(playerCoords.x, playerCoords.y + 1) == '#') {
         renderer->cameraPosition.z = sectorRadius - 2.0f;
       }
-      else if (renderer->cameraPosition.z > sectorRadius) {
+      else if (renderer->cameraPosition.z > sectorRadius && playerCoords.y < yMapSize - 1) {
         ++playerCoords.y;
         renderer->cameraPosition.z = -sectorRadius;
+      }
+      else if (playerCoords.y >= yMapSize - 1) {
+        renderer->cameraPosition.z = sectorRadius;
       }
 
       if (renderer->cameraPosition.z < -sectorRadius + 2.0f &&
         map.getLocation(playerCoords.x, playerCoords.y - 1) == '#') {
         renderer->cameraPosition.z = -sectorRadius + 2.0f;
       }
-      else if (renderer->cameraPosition.z < -sectorRadius) {
+      else if (renderer->cameraPosition.z < -sectorRadius && playerCoords.y > 0) {
         --playerCoords.y;
         renderer->cameraPosition.z = sectorRadius;
+      }
+      else if (playerCoords.y <= 0) {
+        renderer->cameraPosition.z = -sectorRadius;
       }
 
       gun->rotation = renderer->cameraRotation;
@@ -331,7 +341,7 @@ void Game::renderEnv() {
 
       switch (region[y * length + x]) {
       case '#':
-        //LOGINFO(floatToStr(-54.0f + x * 12.0f + 4 * idx) + " - " + floatToStr(-42.0f + y * 12.0f - didx * 4));
+        
         renderer->render(cube, glm::vec3(-54.0f + x * 12.0f, -1.2f, -42.0f + y * 12.0f),
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
         break;
@@ -340,8 +350,7 @@ void Game::renderEnv() {
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
         renderer->render(plane, glm::vec3(-54.0f + x * 12.0f, 2.8f, -42.0f + y * 12.0f),
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
-        //renderer->render(cube, glm::vec3(-54.0f + x * 12.0f + 4 * idx, -1.0f, -42.0f + y * 12.0f - didx * 4),
-          //glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
+        
         break;
       }
 
@@ -359,8 +368,8 @@ void Game::render() {
 
     for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
       if (enemy->inRange) {
-        manRunning->offset.x = -enemy->diffxcoords * 8.0f + enemy->position.x;
-        manRunning->offset.z = -enemy->diffycoords * 8.0f + enemy->position.y;
+        manRunning->offset.x = -enemy->diffxcoords * sectorLength + enemy->position.x;
+        manRunning->offset.z = -enemy->diffycoords * sectorLength + enemy->position.y;
 
         int ycoeff = 0;
 
@@ -399,16 +408,16 @@ void Game::render() {
       }
     }
 
-    /*std::string cameraPosStr = "x: ";
+    /* std::string cameraPosStr = "x: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.x);
      cameraPosStr += " z: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.z);
      cameraPosStr += " coordX: " + intToStr(playerCoords.x);
      cameraPosStr += " coordY: " + intToStr(playerCoords.y);
 
-
-     renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-     glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));*/
+     LOGDEBUG(cameraPosStr);*/
+     //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
+     //glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
 
 
      //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
