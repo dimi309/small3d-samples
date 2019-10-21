@@ -25,7 +25,10 @@ private:
   small3d::Model cube;
   small3d::Model plane;
   const int localCoordRadius = 4;
-  const float coord3dradius = 4.0f;
+  const float sectorRadius = 6.0f;
+  const float sectorLength = 2 * sectorRadius;
+  const float enemySectorRadius = 4.0f;
+
   int shootCount = 0;
   
   int xMapSize;
