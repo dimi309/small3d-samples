@@ -408,14 +408,14 @@ void Game::render() {
       }
     }
 
-    /* std::string cameraPosStr = "x: ";
+     std::string cameraPosStr = "x: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.x);
      cameraPosStr += " z: ";
      cameraPosStr += floatToStr(renderer->cameraPosition.z);
      cameraPosStr += " coordX: " + intToStr(playerCoords.x);
      cameraPosStr += " coordY: " + intToStr(playerCoords.y);
 
-     LOGDEBUG(cameraPosStr);*/
+     LOGDEBUG(cameraPosStr);
      //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
      //glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
 

@@ -33,6 +33,8 @@ void Map::load(std::string filepath) {
     }
     LOGDEBUG("Loaded map.");
     mapfile.close();
+    xsize = mapData[0].size();
+    ysize = mapData.size();
   }
   else {
     throw std::runtime_error("Could not open map file.");
@@ -52,7 +54,7 @@ const char* Map::getRegion(int coordx, int coordy, int radius) {
       int yout = coordy - radius + y;
       int xout = coordx - radius + x;
       if (yout >= 0 && yout < mapData.size() && xout >= 0 && xout < mapData[0].size()) {
-        region[y * dimension + x] = mapData[coordy - radius + y][coordx - radius + x];
+        region[y * dimension + x] = mapData[yout][xout];
       }
       else {
         region[y * dimension + x] = ' ';
@@ -64,13 +66,17 @@ const char* Map::getRegion(int coordx, int coordy, int radius) {
 }
 
 char Map::getLocation(int coordx, int coordy) {
+  if (coordy < 0) return ' ';
+  if (coordx < 0) return ' ';
+  if (coordy >= ysize) return ' ';
+  if (coordx >= xsize) return ' ';
   return mapData[coordy][coordx];
 }
 
 int Map::getXsize() {
-  return mapData[0].size();
+  return xsize;
 }
 
 int Map::getYsize() {
-  return mapData.size();
+  return ysize;
 }

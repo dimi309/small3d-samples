@@ -17,6 +17,7 @@ private:
   std::vector<std::string> mapData;
   char *region;
   const uint32_t maxRegionRadius = 10;
+  int xsize, ysize;
   
 public:
   Map();
