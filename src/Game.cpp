@@ -164,49 +164,56 @@ void Game::process(const KeyInput& input) {
         map.getLocation(playerCoords.x - 1, playerCoords.y) == '#') {
         renderer->cameraPosition.x = -sectorRadius + 2.0f;
       }
-      else if (renderer->cameraPosition.x < -sectorRadius && playerCoords.x > 0) {
-        --playerCoords.x;
-        renderer->cameraPosition.x = sectorRadius;
-      }
-      else if (playerCoords.x <= 0) {
-        renderer->cameraPosition.x = -sectorRadius;
+      else if (renderer->cameraPosition.x < -sectorRadius) {
+        if (playerCoords.x > 0) {
+          --playerCoords.x;
+          renderer->cameraPosition.x = sectorRadius;
+        }
+        else {
+          renderer->cameraPosition.x = -sectorRadius;
+        }
       }
 
       if (renderer->cameraPosition.x > sectorRadius - 2.0f &&
         map.getLocation(playerCoords.x + 1, playerCoords.y) == '#') {
         renderer->cameraPosition.x = sectorRadius - 2.0f;
       }
-      else if (renderer->cameraPosition.x > sectorRadius && playerCoords.x < xMapSize - 1) {
-        ++playerCoords.x;
-        renderer->cameraPosition.x = -sectorRadius;
+      else if (renderer->cameraPosition.x > sectorRadius) {
+        if (playerCoords.x < xMapSize - 1) {
+          ++playerCoords.x;
+          renderer->cameraPosition.x = -sectorRadius;
+        }
+        else {
+          renderer->cameraPosition.x = sectorRadius;
+        }
       }
-      else if (playerCoords.x >= xMapSize - 1) {
-        renderer->cameraPosition.x = sectorRadius;
-      }
-
 
       if (renderer->cameraPosition.z > sectorRadius - 2.0f &&
         map.getLocation(playerCoords.x, playerCoords.y + 1) == '#') {
         renderer->cameraPosition.z = sectorRadius - 2.0f;
       }
-      else if (renderer->cameraPosition.z > sectorRadius && playerCoords.y < yMapSize - 1) {
-        ++playerCoords.y;
-        renderer->cameraPosition.z = -sectorRadius;
-      }
-      else if (playerCoords.y >= yMapSize - 1) {
-        renderer->cameraPosition.z = sectorRadius;
+      else if (renderer->cameraPosition.z > sectorRadius) {
+        if (playerCoords.y < yMapSize - 1) {
+          ++playerCoords.y;
+          renderer->cameraPosition.z = -sectorRadius;
+        }
+        else {
+          renderer->cameraPosition.z = sectorRadius;
+        }
       }
 
       if (renderer->cameraPosition.z < -sectorRadius + 2.0f &&
         map.getLocation(playerCoords.x, playerCoords.y - 1) == '#') {
         renderer->cameraPosition.z = -sectorRadius + 2.0f;
       }
-      else if (renderer->cameraPosition.z < -sectorRadius && playerCoords.y > 0) {
-        --playerCoords.y;
-        renderer->cameraPosition.z = sectorRadius;
-      }
-      else if (playerCoords.y <= 0) {
-        renderer->cameraPosition.z = -sectorRadius;
+      else if (renderer->cameraPosition.z < -sectorRadius) {
+        if (playerCoords.y > 0) {
+          --playerCoords.y;
+          renderer->cameraPosition.z = sectorRadius;
+        }
+        else {
+          renderer->cameraPosition.z = -sectorRadius;
+        }
       }
 
       gun->rotation = renderer->cameraRotation;
@@ -269,7 +276,7 @@ void Game::process(const KeyInput& input) {
                 enemy->position.y = enemySectorRadius;
               }
 
-              
+
             }
             if (enemy->position.y > enemySectorRadius) {
               if (map.getLocation(enemy->coords.x, enemy->coords.y + 1) == '#') {
@@ -279,7 +286,7 @@ void Game::process(const KeyInput& input) {
                 ++enemy->coords.y;
                 enemy->position.y = -enemySectorRadius;
               }
-              
+
             }
           }
           else {
@@ -341,7 +348,7 @@ void Game::renderEnv() {
 
       switch (region[y * length + x]) {
       case '#':
-        
+
         renderer->render(cube, glm::vec3(-54.0f + x * 12.0f, -1.2f, -42.0f + y * 12.0f),
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
         break;
@@ -350,7 +357,7 @@ void Game::renderEnv() {
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
         renderer->render(plane, glm::vec3(-54.0f + x * 12.0f, 2.8f, -42.0f + y * 12.0f),
           glm::vec3(0.0f, 0.0f, 0.0f), "tileTexture");
-        
+
         break;
       }
 
@@ -408,20 +415,20 @@ void Game::render() {
       }
     }
 
-     std::string cameraPosStr = "x: ";
-     cameraPosStr += floatToStr(renderer->cameraPosition.x);
-     cameraPosStr += " z: ";
-     cameraPosStr += floatToStr(renderer->cameraPosition.z);
-     cameraPosStr += " coordX: " + intToStr(playerCoords.x);
-     cameraPosStr += " coordY: " + intToStr(playerCoords.y);
+    std::string cameraPosStr = "x: ";
+    cameraPosStr += floatToStr(renderer->cameraPosition.x);
+    cameraPosStr += " z: ";
+    cameraPosStr += floatToStr(renderer->cameraPosition.z);
+    cameraPosStr += " coordX: " + intToStr(playerCoords.x);
+    cameraPosStr += " coordY: " + intToStr(playerCoords.y);
 
-     LOGDEBUG(cameraPosStr);
-     //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-     //glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+    LOGDEBUG(cameraPosStr + " size: " + intToStr(xMapSize) + "x" + intToStr(yMapSize));
+    //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
+    //glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
 
 
-     //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
-     //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
+    //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
+    //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
   }
   else {
     renderer->clearScreen(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
