@@ -33,7 +33,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load("resources/map.txt");
@@ -361,8 +361,6 @@ void Game::renderEnv() {
 
         break;
       }
-
-
     }
   }
 }
@@ -415,21 +413,6 @@ void Game::render() {
         renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
       }
     }
-
-    std::string cameraPosStr = "x: ";
-    cameraPosStr += floatToStr(renderer->cameraPosition.x);
-    cameraPosStr += " z: ";
-    cameraPosStr += floatToStr(renderer->cameraPosition.z);
-    cameraPosStr += " coordX: " + intToStr(playerCoords.x);
-    cameraPosStr += " coordY: " + intToStr(playerCoords.y);
-
-    LOGDEBUG(cameraPosStr + " size: " + intToStr(xMapSize) + "x" + intToStr(yMapSize));
-    //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-    //glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
-
-
-    //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
-    //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
   }
   else {
     renderer->clearScreen(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
