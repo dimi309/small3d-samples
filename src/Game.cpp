@@ -301,7 +301,7 @@ void Game::process(const KeyInput& input) {
             }
           }
           if (touchx && touchy) {
-            //dieCount = 20;
+            dieCount = 20;
           }
         }
 
