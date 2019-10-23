@@ -226,6 +226,7 @@ void Game::process(const KeyInput& input) {
       bool killedOne = false;
 
       for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
+
         int diffxcoords = playerCoords.x - enemy->coords.x;
         int diffycoords = playerCoords.y - enemy->coords.y;
 
