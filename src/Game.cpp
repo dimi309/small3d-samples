@@ -16,12 +16,25 @@
 #define ENEMY_SPEED 0.05f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 12
+#ifdef __APPLE__ 
+#include <mach-o/dyld.h>
+#endif
 
 using namespace small3d;
 
 Game::Game() {
 
-  manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
+#ifdef __APPLE__
+  char execPath[2048];
+  uint32_t execPathSize = sizeof(execPath);
+  _NSGetExecutablePath(&execPath[0], &execPathSize);
+  basePath = std::string(execPath);
+  // "gloom" (the executable at the end of the path)
+  // is 5 characters
+  basePath = basePath.substr(0, basePath.size() - 5);
+#endif
+  fontFile = basePath + fontFile;
+  manRunning = new SceneObject("manRunning", basePath + "resources/anthropoid_run/anthropoid", 11, "", 0);
 
 
   manRunning->setFrameDelay(8);
@@ -29,22 +42,22 @@ Game::Game() {
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
-  gun = new SceneObject("gun", "resources/gun.obj");
+  gun = new SceneObject("gun", basePath + "resources/gun.obj");
 
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
-    1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
+    1.0f, 60.0f, -1.0f, basePath + "resources/shaders/", 240);
 
-  map.load("resources/map.txt");
+  map.load(basePath + "resources/map.txt");
 
   xMapSize = map.getXsize();
   yMapSize = map.getYsize();
 
-  cube = Model("resources/cube.obj");
-  plane = Model("resources/plane.obj");
+  cube = Model(basePath + "resources/cube.obj");
+  plane = Model(basePath + "resources/plane.obj");
 
-  renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
+  renderer->generateTexture("tileTexture", Image(basePath + "resources/images/tile.png"));
 
   renderer->cameraPosition.y = -0.1f;
 
@@ -71,7 +84,7 @@ Game::Game() {
   enemy.position = glm::vec2(1.0f, 1.0f);
   enemies.push_back(enemy);
 
-  gunshot = Sound("resources/sounds/0438.ogg");
+  gunshot = Sound(basePath + "resources/sounds/0438.ogg");
 
 }
 
@@ -366,7 +379,7 @@ void Game::renderEnv() {
 }
 
 void Game::render() {
-  renderer->clearScreen();
+  renderer->clearScreen(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
   if (!inMenu) {
 
     renderEnv();
@@ -417,22 +430,22 @@ void Game::render() {
   else {
     renderer->clearScreen(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
     renderer->write("GLOOM!", glm::vec3(1.0f, 0.0f, 0.0f),
-      glm::vec2(-0.8f, 0.6f), glm::vec2(0.8f, 0.0f));
+      glm::vec2(-0.8f, 0.6f), glm::vec2(0.8f, 0.0f), 48, fontFile);
 
     if (won) {
       renderer->write("You won", glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f));
+        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f), 48, fontFile);
     }
     else if (died) {
 
       renderer->write("You died", glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f));
+        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f), 48, fontFile);
 
     }
 
     renderer->write("Press enter to play, esc to quit",
       glm::vec3(1.0f, 0.0f, 0.0f),
-      glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f));
+		    glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f), 48, fontFile);
   }
   renderer->swapBuffers();
 
