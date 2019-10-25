@@ -8,6 +8,7 @@
 
 #include "KeyInput.hpp"
 #include "Game.hpp"
+#include <small3d/Logger.hpp>
 
 KeyInput input;
 
@@ -59,13 +60,25 @@ int main(int argc, char** argv) {
   double seconds = glfwGetTime();
   double prevSeconds = seconds;
   double secondsInterval = 1.0 / framerate;
+  int fps = 0;
+  int finalfps = 0;
   
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
     
     seconds = glfwGetTime();
-    if (seconds - prevSeconds > secondsInterval) {
-      prevSeconds = seconds;
+    //if (seconds - prevSeconds > secondsInterval) {
+    if (true) {
+      
+      if (seconds - prevSeconds > 1.0f) {
+        prevSeconds = seconds;
+        finalfps = fps;
+        fps = 0;
+      }
+      else {
+        ++fps;
+      }
+      glfwSetWindowTitle(window, ("fps: " + small3d::intToStr(finalfps)).c_str());
       game.process(input);
       game.render();
       
