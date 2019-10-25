@@ -46,7 +46,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, basePath + "resources/shaders/", 240);
 
   map.load(basePath + "resources/map.txt");
@@ -426,24 +426,6 @@ void Game::render() {
         renderer->render(*manRunning, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
       }
     }
-
-    //std::string cameraPosStr = "x: ";
-    //cameraPosStr += floatToStr(renderer->cameraPosition.x);
-    //cameraPosStr += " z: ";
-    //cameraPosStr += floatToStr(renderer->cameraPosition.z);
-    //cameraPosStr += " coordX: " + intToStr(playerCoords.x);
-    //cameraPosStr += " coordY: " + intToStr(playerCoords.y);
-
-
-    //renderer->write(cameraPosStr, glm::vec3(1.0f, 1.0f, 1.0f),
-    //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f), 48, 
-    //  "resources/fonts/CrusoeText/CrusoeText-Regular.ttf");
-
-
-      //renderer->write(floatToStr(enemies[3].dotp), glm::vec3(1.0f, 1.0f, 1.0f),
-      //  glm::vec2(-0.2f, -0.6f), glm::vec2(1.0f, -0.8f));
-
-
   }
   else {
     renderer->clearScreen(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
@@ -463,7 +445,7 @@ void Game::render() {
 
     renderer->write("Press enter to play, esc to quit",
       glm::vec3(1.0f, 0.0f, 0.0f),
-      glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f), 48, fontFile);
+		    glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f), 48, fontFile);
   }
   renderer->swapBuffers();
 
