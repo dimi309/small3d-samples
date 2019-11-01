@@ -57,6 +57,11 @@ private:
   int dieCount = 0;
   int winCount = 0;
   
+  small3d::Model titleRect, outcomeRect, instructionsRect;
+
+  const std::string MSG_TITLE = "titleTexture";
+  const std::string MSG_OUTCOME = "outcomeTexture";
+  const std::string MSG_INSTRUCTIONS = "instructionsTexture";
 
 public:
   Game();

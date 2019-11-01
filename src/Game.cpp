@@ -36,7 +36,6 @@ Game::Game() {
   fontFile = basePath + fontFile;
   manRunning = new SceneObject("manRunning", basePath + "resources/anthropoid_run/anthropoid", 11, "", 0);
 
-
   manRunning->setFrameDelay(8);
 
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
@@ -46,7 +45,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
     1.0f, 60.0f, -1.0f, basePath + "resources/shaders/", 240);
 
   map.load(basePath + "resources/map.txt");
@@ -86,6 +85,19 @@ Game::Game() {
 
   gunshot = Sound(basePath + "resources/sounds/0438.ogg");
 
+  renderer->createRectangle(titleRect, glm::vec3(-0.8f, 0.6f, -1.0f), 
+    glm::vec3(0.8f, 0.0f, -1.0f));
+
+  renderer->createRectangle(outcomeRect, glm::vec3(-0.6f, -0.2f, -1.0f),
+    glm::vec3(0.6f, -0.4f, -1.0f));
+
+  renderer->createRectangle(instructionsRect, glm::vec3(-0.8f, -0.5f, -1.0f), 
+    glm::vec3(0.8f, -0.7f, -1.0f));
+
+  renderer->generateTexture(MSG_TITLE, "GLOOM!", glm::vec3(1.0f, 0.0f, 0.0f));
+  renderer->generateTexture(MSG_INSTRUCTIONS, "Press enter to play, esc to quit", 
+    glm::vec3(1.0f, 1.0f, 1.0f));
+
 }
 
 Game::~Game() {
@@ -118,6 +130,12 @@ void Game::init() {
 
 void Game::terminate() {
   inMenu = true;
+  if (won) {
+    renderer->generateTexture(MSG_OUTCOME, "You won", glm::vec3(1.0f, 0.0f, 0.0f));
+  }
+  else if (died) {
+    renderer->generateTexture(MSG_OUTCOME, "You died", glm::vec3(1.0f, 0.0f, 0.0f));
+  }
 }
 
 void Game::process(const KeyInput& input) {
@@ -429,23 +447,14 @@ void Game::render() {
   }
   else {
     renderer->clearScreen(glm::vec4(0.5f, 0.0f, 0.0f, 1.0f));
-    renderer->write("GLOOM!", glm::vec3(1.0f, 0.0f, 0.0f),
-      glm::vec2(-0.8f, 0.6f), glm::vec2(0.8f, 0.0f), 48, fontFile);
-
-    if (won) {
-      renderer->write("You won", glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f), 48, fontFile);
-    }
-    else if (died) {
-
-      renderer->write("You died", glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(-0.6f, -0.2f), glm::vec2(0.6f, -0.4f), 48, fontFile);
-
+    renderer->render(titleRect, MSG_TITLE, false);
+    
+    if (won || died) {
+      renderer->render(outcomeRect, MSG_OUTCOME, false);
     }
 
-    renderer->write("Press enter to play, esc to quit",
-      glm::vec3(1.0f, 0.0f, 0.0f),
-		    glm::vec2(-0.8f, -0.5f), glm::vec2(0.8f, -0.7f), 48, fontFile);
+    renderer->render(instructionsRect, MSG_INSTRUCTIONS, false);
+
   }
   renderer->swapBuffers();
 
