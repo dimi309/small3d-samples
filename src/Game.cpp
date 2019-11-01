@@ -45,7 +45,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 800, 600, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, basePath + "resources/shaders/", 240);
 
   map.load(basePath + "resources/map.txt");
@@ -96,7 +96,7 @@ Game::Game() {
 
   renderer->generateTexture(MSG_TITLE, "GLOOM!", glm::vec3(1.0f, 0.0f, 0.0f));
   renderer->generateTexture(MSG_INSTRUCTIONS, "Press enter to play, esc to quit", 
-    glm::vec3(1.0f, 1.0f, 1.0f));
+    glm::vec3(1.0f, 0.0f, 0.0f));
 
 }
 
