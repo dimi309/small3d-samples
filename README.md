@@ -8,6 +8,8 @@ Kill them first.
 
 Move with the arrows. Shoot with the spacebar. Escape to quit the game.
 
+![screenshot](screenshot.png)
+
 Building
 --------
 Create a directory called *deps* inside the game project's root directory.
