@@ -9,6 +9,7 @@
 #include "Game.hpp"
 #include <small3d/Logger.hpp>
 #include <cmath>
+#include <small3d/BasePath.hpp>
 
 #define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.08f
@@ -16,47 +17,34 @@
 #define ENEMY_SPEED 0.05f
 #define TOUCH_DISTANCE 1.7f
 #define SHOOT_DURATION 12
-#ifdef __APPLE__ 
-#include <mach-o/dyld.h>
-#endif
 
 using namespace small3d;
 
 Game::Game() {
 
-#ifdef __APPLE__
-  char execPath[2048];
-  uint32_t execPathSize = sizeof(execPath);
-  _NSGetExecutablePath(&execPath[0], &execPathSize);
-  basePath = std::string(execPath);
-  // "gloom" (the executable at the end of the path)
-  // is 5 characters
-  basePath = basePath.substr(0, basePath.size() - 5);
-#endif
-  fontFile = basePath + fontFile;
-  manRunning = new SceneObject("manRunning", basePath + "resources/anthropoid_run/anthropoid", 11, "", 0);
+  manRunning = new SceneObject("manRunning", "resources/anthropoid_run/anthropoid", 11, "", 0);
 
   manRunning->setFrameDelay(8);
 
   manRunning->offset = glm::vec3(1.0f, -1.0f, -3.0f);
   manRunning->startAnimating();
 
-  gun = new SceneObject("gun", basePath + "resources/gun.obj");
+  gun = new SceneObject("gun", "resources/gun.obj");
 
   small3d::initLogger();
 
   renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
-    1.0f, 60.0f, -1.0f, basePath + "resources/shaders/", 240);
+    1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
-  map.load(basePath + "resources/map.txt");
+  map.load(getBasePath() + "resources/map.txt");
 
   xMapSize = map.getXsize();
   yMapSize = map.getYsize();
 
-  cube = Model(basePath + "resources/cube.obj");
-  plane = Model(basePath + "resources/plane.obj");
+  cube = Model("resources/cube.obj");
+  plane = Model("resources/plane.obj");
 
-  renderer->generateTexture("tileTexture", Image(basePath + "resources/images/tile.png"));
+  renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
   renderer->cameraPosition.y = -0.1f;
 
@@ -83,7 +71,7 @@ Game::Game() {
   enemy.position = glm::vec2(1.0f, 1.0f);
   enemies.push_back(enemy);
 
-  gunshot = Sound(basePath + "resources/sounds/0438.ogg");
+  gunshot = Sound("resources/sounds/0438.ogg");
 
   renderer->createRectangle(titleRect, glm::vec3(-0.8f, 0.6f, -1.0f), 
     glm::vec3(0.8f, 0.0f, -1.0f));
