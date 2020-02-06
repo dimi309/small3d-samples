@@ -32,7 +32,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 1024, 764, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load(getBasePath() + "resources/map.txt");
@@ -332,10 +332,10 @@ void Game::process(const KeyInput& input) {
         float distance = std::sqrtf(std::powf(distanceX, 2) + std::powf(distanceY, 2));
 
         glm::vec3 normVecToPlayer(distanceX / distance, distanceY / distance, 0.0f);
-        glm::vec3 normCamVec(sin(renderer->cameraRotation.y), cos(renderer->cameraRotation.y), 0.0f);
-        enemy->dotp = glm::dot(normCamVec, normVecToPlayer);
+        glm::vec3 normCamVec(cos(renderer->cameraRotation.y + 1.57f), sin(renderer->cameraRotation.y + 1.57f), 0.0f);
+        enemy->dotp = normVecToPlayer.x * normCamVec.x + normVecToPlayer.y * normCamVec.y;
 
-        if (!enemy->dead && enemy->dotp > 0.8f && shootCount == SHOOT_DURATION && !killedOne) {
+        if (!enemy->dead && enemy->dotp > 0.95f && shootCount == SHOOT_DURATION && !killedOne) {
           enemy->dead = true;
           killedOne = true;
           ++numDead;
@@ -391,12 +391,6 @@ void Game::render() {
 
     renderEnv();
     renderer->render(*gun, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-
-    renderer->generateTexture("dotp", floatToStr(enemies[2].dotp), glm::vec3(1.0f, 1.0f, 1.0f));
-    renderer->render(titleRect, "dotp", false);
-
-    renderer->generateTexture("rotation", floatToStr(renderer->cameraRotation.y), glm::vec3(1.0f, 1.0f, 1.0f));
-    renderer->render(instructionsRect, "rotation", false);
 
     for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
       if (enemy->inRange) {
