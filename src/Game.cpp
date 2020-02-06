@@ -33,7 +33,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 1024, 764, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load(getBasePath() + "resources/map.txt");
@@ -332,7 +332,7 @@ void Game::process(const KeyInput& input) {
         float distanceX = renderer->cameraPosition.x - enemy->position.x + enemy->diffxcoords * sectorLength;
         float distanceY = renderer->cameraPosition.z - enemy->position.y + enemy->diffycoords * sectorLength;
 
-        enemy->dotp = -distanceY * sin(renderer->cameraRotation.y) - distanceX * cos(renderer->cameraRotation.y);
+        enemy->dotp = distanceY * sin(renderer->cameraRotation.y) + distanceX * cos(renderer->cameraRotation.y);
 
         if (!enemy->dead && std::abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
           enemy->dead = true;
