@@ -11,7 +11,6 @@
 #include <cmath>
 #include <small3d/BasePath.hpp>
 
-#define FULL_ROTATION 6.28f // More or less 360 degrees in radians
 #define CAMERA_ROTATION_SPEED 0.08f
 #define CAMERA_SPEED 0.5f
 #define ENEMY_SPEED 0.05f
@@ -155,17 +154,16 @@ void Game::process(const KeyInput& input) {
 
       if (input.left) {
         renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
-
-        if (renderer->cameraRotation.y < -FULL_ROTATION)
-          renderer->cameraRotation.y = 0.0f;
-
       }
       else if (input.right) {
         renderer->cameraRotation.y += CAMERA_ROTATION_SPEED;
+      }
 
-        if (renderer->cameraRotation.y > FULL_ROTATION)
-          renderer->cameraRotation.y = 0.0f;
-
+      if (renderer->cameraRotation.y > 3.14f) {
+        renderer->cameraRotation.y -= 6.28f;
+      }
+      else if (renderer->cameraRotation.y < -3.14f) {
+        renderer->cameraRotation.y += 6.28f;
       }
 
       if (input.up) {
@@ -331,10 +329,13 @@ void Game::process(const KeyInput& input) {
 
         float distanceX = renderer->cameraPosition.x - enemy->position.x + enemy->diffxcoords * sectorLength;
         float distanceY = renderer->cameraPosition.z - enemy->position.y + enemy->diffycoords * sectorLength;
+        float distance = std::sqrtf(std::powf(distanceX, 2) + std::powf(distanceY, 2));
 
-        enemy->dotp = distanceY * sin(renderer->cameraRotation.y) + distanceX * cos(renderer->cameraRotation.y);
+        glm::vec3 normVecToPlayer(distanceX / distance, distanceY / distance, 0.0f);
+        glm::vec3 normCamVec(sin(renderer->cameraRotation.y), cos(renderer->cameraRotation.y), 0.0f);
+        enemy->dotp = glm::dot(normCamVec, normVecToPlayer);
 
-        if (!enemy->dead && std::abs(enemy->dotp) < 1.0f && shootCount == SHOOT_DURATION && !killedOne) {
+        if (!enemy->dead && enemy->dotp > 0.8f && shootCount == SHOOT_DURATION && !killedOne) {
           enemy->dead = true;
           killedOne = true;
           ++numDead;
@@ -390,6 +391,12 @@ void Game::render() {
 
     renderEnv();
     renderer->render(*gun, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    renderer->generateTexture("dotp", floatToStr(enemies[2].dotp), glm::vec3(1.0f, 1.0f, 1.0f));
+    renderer->render(titleRect, "dotp", false);
+
+    renderer->generateTexture("rotation", floatToStr(renderer->cameraRotation.y), glm::vec3(1.0f, 1.0f, 1.0f));
+    renderer->render(instructionsRect, "rotation", false);
 
     for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
       if (enemy->inRange) {
