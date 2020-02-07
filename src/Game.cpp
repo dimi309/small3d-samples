@@ -129,7 +129,7 @@ void Game::process(const KeyInput& input) {
 
   if (!inMenu) {
     if (dieCount > 0) {
-      renderer->cameraRotation.y += 1.0f;
+      renderer->cameraRotation.y -= 1.0f;
       --dieCount;
       if (dieCount == 0) {
         died = true;
@@ -153,10 +153,10 @@ void Game::process(const KeyInput& input) {
 
 
       if (input.left) {
-        renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
+        renderer->cameraRotation.y += CAMERA_ROTATION_SPEED;
       }
       else if (input.right) {
-        renderer->cameraRotation.y += CAMERA_ROTATION_SPEED;
+        renderer->cameraRotation.y -= CAMERA_ROTATION_SPEED;
       }
 
       if (renderer->cameraRotation.y > 3.14f) {
@@ -168,12 +168,12 @@ void Game::process(const KeyInput& input) {
 
       if (input.up) {
 
-        renderer->cameraPosition.x += sin(renderer->cameraRotation.y) * CAMERA_SPEED;
+        renderer->cameraPosition.x -= sin(renderer->cameraRotation.y) * CAMERA_SPEED;
         renderer->cameraPosition.z -= cos(renderer->cameraRotation.y) * CAMERA_SPEED;
 
       }
       else if (input.down) {
-        renderer->cameraPosition.x -= sin(renderer->cameraRotation.y) * CAMERA_SPEED;
+        renderer->cameraPosition.x += sin(renderer->cameraRotation.y) * CAMERA_SPEED;
         renderer->cameraPosition.z += cos(renderer->cameraRotation.y) * CAMERA_SPEED;
       }
 
@@ -237,7 +237,7 @@ void Game::process(const KeyInput& input) {
       gun->rotation.x += shootCount * 0.3f;
       gun->offset = renderer->cameraPosition;
       gun->offset.y -= 0.9f;
-      gun->offset.x += sin(renderer->cameraRotation.y) * 1.8f;
+      gun->offset.x -= sin(renderer->cameraRotation.y) * 1.8f;
       gun->offset.z -= cos(renderer->cameraRotation.y) * 1.8f;
 
       bool killedOne = false;
@@ -332,7 +332,7 @@ void Game::process(const KeyInput& input) {
         float distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceZ, 2));
 
         glm::vec3 normVecToPlayer(distanceZ / distance, distanceX / distance, 0.0f);
-        glm::vec3 normCamVec(cos(-renderer->cameraRotation.y), sin(-renderer->cameraRotation.y), 0.0f);
+        glm::vec3 normCamVec(cos(renderer->cameraRotation.y), sin(renderer->cameraRotation.y), 0.0f);
         enemy->dotp = normVecToPlayer.x * normCamVec.x + normVecToPlayer.y * normCamVec.y;
 
         if (!enemy->dead && enemy->dotp > 0.992f && shootCount == SHOOT_DURATION && !killedOne) {
@@ -400,27 +400,27 @@ void Game::render() {
         int ycoeff = 0;
 
         if (enemy->diffSectorX < 0 || (enemy->diffSectorX == 0 && renderer->cameraPosition.x - enemy->position.x < 0)) {
-          manRunning->rotation.y = 1.7f;
+          manRunning->rotation.y = -1.7f;
           if (std::abs(enemy->diffSectorX) <= std::abs(enemy->diffSectorZ)) {
             ycoeff = -1;
           }
         }
         else {
-          manRunning->rotation.y = -1.7f;
+          manRunning->rotation.y = 1.7f;
           if (std::abs(enemy->diffSectorX) <= std::abs(enemy->diffSectorZ)) {
             ycoeff = 1;
           }
         }
 
         if (enemy->diffSectorZ < 0 || (enemy->diffSectorZ == 0 && renderer->cameraPosition.z - enemy->position.z < 0)) {
-          manRunning->rotation.y -= ycoeff * 0.85f;
+          manRunning->rotation.y += ycoeff * 0.85f;
         }
         else {
-          manRunning->rotation.y += ycoeff * 0.85f;
+          manRunning->rotation.y -= ycoeff * 0.85f;
         }
 
         if (enemy->dead) {
-          manRunning->rotation.x = 1.75f;
+          manRunning->rotation.x = -1.75f;
           manRunning->rotation.y = 0.0f;
           manRunning->offset.y = -0.9f;
           manRunning->stopAnimating();
