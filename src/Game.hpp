@@ -36,7 +36,7 @@ private:
   int xMapSize;
   int yMapSize;
 
-  glm::ivec2 playerCoords;
+  glm::ivec2 playerSector;
   
   small3d::SceneObject *manRunning;
   small3d::SceneObject *gun;

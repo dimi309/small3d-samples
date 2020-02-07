@@ -13,12 +13,12 @@
 class Enemy {
 
 public:
-  glm::ivec2 coords = glm::ivec2(0, 0);
-  glm::vec2 position = glm::vec2(0.0f, 0.0f);
+  glm::ivec3 sectorPosition = glm::ivec3(0, 0, 0);
+  glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   float dotp = 0.0f;
-  int diffxcoords = 0;
-  int diffycoords = 0;
+  int diffSectorX = 0;
+  int diffSectorZ = 0;
   bool inRange = false;
   bool dead = false;
   Enemy();
