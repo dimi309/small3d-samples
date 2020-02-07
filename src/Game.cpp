@@ -335,7 +335,7 @@ void Game::process(const KeyInput& input) {
         glm::vec3 normCamVec(cos(-renderer->cameraRotation.y), sin(-renderer->cameraRotation.y), 0.0f);
         enemy->dotp = normVecToPlayer.x * normCamVec.x + normVecToPlayer.y * normCamVec.y;
 
-        if (!enemy->dead && enemy->dotp > 0.95f && shootCount == SHOOT_DURATION && !killedOne) {
+        if (!enemy->dead && enemy->dotp > 0.992f && shootCount == SHOOT_DURATION && !killedOne) {
           enemy->dead = true;
           killedOne = true;
           ++numDead;
