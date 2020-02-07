@@ -32,7 +32,7 @@ Game::Game() {
 
   small3d::initLogger();
 
-  renderer = &small3d::Renderer::getInstance("Gloom", 1024, 768, 1.0f,
+  renderer = &small3d::Renderer::getInstance("Gloom", 0, 0, 1.0f,
     1.0f, 60.0f, -1.0f, "resources/shaders/", 240);
 
   map.load(getBasePath() + "resources/map.txt");
@@ -391,13 +391,6 @@ void Game::render() {
 
     renderEnv();
     renderer->render(*gun, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-
-    renderer->generateTexture("dotp", floatToStr(enemies[2].dotp), glm::vec3(1.0f, 1.0f, 1.0f));
-    renderer->render(titleRect, "dotp", false);
-    
-    renderer->generateTexture("rotation", floatToStr(renderer->cameraRotation.y), glm::vec3(1.0f, 1.0f, 1.0f));
-    renderer->render(instructionsRect, "rotation", false);
-
 
     for (std::vector<Enemy>::iterator enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
       if (enemy->inRange) {
