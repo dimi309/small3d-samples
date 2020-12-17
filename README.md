@@ -1,7 +1,7 @@
 Gloom
 =====
 
-*Requires the small3d framework*
+*Requires small3d* - https://github.com/dimi309/small3d
 
 You are in a gloomy place and some anthropoids are trying to kill you.
 Kill them first.
@@ -13,7 +13,7 @@ Move with the arrows. Shoot with the spacebar. Escape to quit the game.
 Building
 --------
 Create a directory called *deps* inside the game project's root directory.
-Build the small3d framework and copy the resulting *include*, *lib* and *shaders* directories from the small3d *build* directory to the *deps* directory created. Then from the game project's root directory, do the following:
+Build small3d and copy the resulting *include*, *lib* and *shaders* directories from the small3d *build* directory to the *deps* directory created. Then from the game project's root directory, do the following:
 	
 	mkdir build
     cd build
