@@ -12,16 +12,32 @@ target_include_directories(gloom PUBLIC
   ${FREETYPE_INCLUDE_DIRS}
   )
 
-target_link_libraries(gloom PUBLIC
-  ${SMALL3D_LIBRARY}
-  ${GLFW_LIBRARIES}
-  ${Vulkan_LIBRARIES}
-  ${PNG_LIBRARIES}
-  ${VORBIS_LIBRARIES}
-  ${OGG_LIBRARIES}
-  ${PORTAUDIO_LIBRARIES}
-  ${FREETYPE_LIBRARIES}
-  )
+if(NOT SMALL3D_OPENGL) # Vulkan
+  target_include_directories(gloom PUBLIC ${Vulkan_INCLUDE_DIR})
+  target_link_libraries(gloom PUBLIC
+    ${SMALL3D_LIBRARY}
+    ${GLFW_LIBRARIES}
+    ${Vulkan_LIBRARIES}
+    ${PNG_LIBRARIES}
+    ${VORBIS_LIBRARIES}
+    ${OGG_LIBRARIES}
+    ${PORTAUDIO_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
+    )
+else() # OpenGL
+  target_include_directories(gloom PUBLIC ${OPENGL_INCLUDE_DIR})
+  target_link_libraries(gloom PUBLIC
+    ${SMALL3D_LIBRARY}
+    ${GLEW_LIBRARIES}
+    ${OPENGL_LIBRARIES}
+    ${GLFW_LIBRARIES}
+    ${PNG_LIBRARIES}
+    ${VORBIS_LIBRARIES}
+    ${OGG_LIBRARIES}
+    ${PORTAUDIO_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
+    )
+endif()
 
 if(UNIX)
   target_include_directories(gloom PUBLIC
