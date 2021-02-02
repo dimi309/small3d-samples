@@ -24,22 +24,22 @@ echo Please indicate build type: debug or release, followed by opengl if you wou
 endlocal & exit /b 1
 )
 
-echo Entering small3d directory (must have been copied here)...
-cd small3d
-if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-git clean -fdx
-if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-cd deps
-call prepare-vs %1 %2
-if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-cd ..
-call build-vs %1 %2
-if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-cd ..\..
+REM echo Entering small3d directory (must have been copied here)...
+REM cd small3d
+REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+REM git clean -fdx
+REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+REM cd deps
+REM call prepare-vs %1 %2
+REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+REM cd ..
+REM call build-vs %1 %2
+REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+REM cd ..\..
 
-for %%A in (avoidthebug, chasethegoat, frogremixed, gloom) do (
+for %%A in (avoidthebug, ball, chasethegoat, frogremixed, gloom) do (
 cd %%A
-git clean -fdx
+if exist deps rmdir /Q /S deps
 mkdir deps
 cd deps
 for %%B in (include, lib, shaders) do (
@@ -47,6 +47,7 @@ xcopy ..\..\small3d\build\%%B %%B\ /s /e /y
 if "!errorlevel!" neq "0" endlocal & exit /b !errorlevel!
 )
 cd ..
+if exist build rmdir /Q /S build
 mkdir build
 cd build
 cmake .. -G"Visual Studio 16 2019" -A x64 %opengl_cmake_def%
