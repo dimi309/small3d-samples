@@ -2,5 +2,6 @@
 *.o
 *~
 a.out
-small3d
+build
+deps
 .DS_Store
