@@ -2,5 +2,5 @@
 *.o
 *~
 a.out
-small3d
 .DS_Store
+small3d

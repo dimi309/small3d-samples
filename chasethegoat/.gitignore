@@ -1,0 +1,7 @@
+*.exe
+*.o
+*~
+a.out
+build
+deps
+.DS_Store
