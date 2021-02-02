@@ -24,7 +24,9 @@ echo Please indicate build type: debug or release, followed by opengl if you wou
 endlocal & exit /b 1
 )
 
+echo Entering small3d directory (must have been copied here)...
 cd small3d
+if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
 git clean -fdx
 if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
 cd deps
