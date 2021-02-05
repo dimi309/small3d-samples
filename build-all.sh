@@ -37,6 +37,11 @@ fi
 
 for sampledir in avoidthebug ball chasethegoat frogremixed gloom
 do
+
+    if [ "$2" == "opengl" ] && [ "$sampledir" == "ball" ]; then
+	echo "Not building ball sample for OpenGL"
+	continue
+    fi
     cd $sampledir
     if [ -d "deps" ]; then rm -rf deps; fi
     mkdir deps
