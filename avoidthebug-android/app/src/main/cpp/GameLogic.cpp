@@ -27,7 +27,7 @@
 #include <memory>
 #include <stdexcept>
 #include <cmath>
-#include "GameLogic.hpp"
+#include "include/GameLogic.hpp"
 #include <sys/time.h>
 
 using namespace small3d;

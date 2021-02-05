@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <unistd.h>
-#include "GameLogic.hpp"
+#include "include/GameLogic.hpp"
 
 extern "C" {
 #include "vkzos.h"
