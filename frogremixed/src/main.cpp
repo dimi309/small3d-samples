@@ -81,8 +81,8 @@ private:
   enum GameState { MENU, PLAYING, CRUSHED, DROWNED, WON };
   double timeToMainMenu = 0;
   double timeInMainMenu = 0;
-  double wins = 0;
-  double losses = 0;
+  uint32_t wins = 0;
+  uint32_t losses = 0;
 
   Model skyRect, terrainRect, msgRect, msgDrownedRect, 
     scoreRect;
@@ -319,9 +319,6 @@ private:
     if (wins > 0 || losses > 0) {
       renderer->render(scoreRect, MSG_SCORE, false);
     }
-    /*renderer->write(winslosses, glm::vec3(1.0f, 1.0f, 1.0f),
-      glm::vec3(-0.4f, -0.2f, 1.0f),
-      glm::vec3(0.4f, -0.4f, 1.0f), 200);*/
     renderer->swapBuffers();
   }
 
