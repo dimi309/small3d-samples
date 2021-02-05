@@ -24,20 +24,24 @@ echo Please indicate build type: debug or release, followed by opengl if you wou
 endlocal & exit /b 1
 )
 
-REM echo Entering small3d directory (must have been copied here)...
-REM cd small3d
-REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-REM git clean -fdx
-REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-REM cd deps
-REM call prepare-vs %1 %2
-REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-REM cd ..
-REM call build-vs %1 %2
-REM if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-REM cd ..\..
+echo Entering small3d directory (must have been copied here)...
+cd small3d
+if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+cd deps
+if exist include rmdir /Q /S include
+if exist lib rmdir /Q /S lib
+call prepare-vs %1 %2
+if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+cd ..
+if exist build rmdir /Q /S build
+call build-vs %1 %2
+if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
+cd ..
 
-for %%A in (avoidthebug, ball, chasethegoat, frogremixed, gloom) do (
+REM Not building ball because it needs to be skipped for OpenGL
+REM and continuing in a .bat for loop would produce a lot more
+REM code
+for %%A in (avoidthebug, chasethegoat, frogremixed, gloom) do (
 cd %%A
 if exist deps rmdir /Q /S deps
 mkdir deps
