@@ -34,13 +34,12 @@ using namespace small3d;
 namespace AvoidTheBug3D {
   
   GameLogic::GameLogic() :
-    goat("goat", "resources/models/goat.glb", "Cube", "Armature.001", "Armature.001Action"),
+    goat("goat", "resources/models/goat.glb", "Cube", "Armature.001", "Armature.001Action", 2),
     bug("bug", "resources/models/bug.glb", "Cube"),
-    tree("tree", "resources/models/Tree/tree.obj",
-	 1, "resources/models/TreeBB/TreeBB.obj"),
+    tree("tree", "resources/models/tree.glb", "Cube", "", "", 2),
     bahSound("resources/sounds/bah.ogg"){
     
-    renderer = &Renderer::getInstance("Avoid the Bug 3D", 854, 480, 0.785f, 1.0f, 24.0f, "resources/shaders/", 1000);
+    renderer = &Renderer::getInstance("Avoid the Bug 3D", 854, 480);
     renderer->cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
     renderer->createRectangle(startScreenRect, glm::vec3(-1.0f, 1.0f, 1.0f),
@@ -52,16 +51,15 @@ namespace AvoidTheBug3D {
     renderer->createRectangle(groundRect, glm::vec3(-25.0f, GROUND_Y, MIN_Z),
       glm::vec3(25.0f, GROUND_Y, MAX_Z));
 
-    Image goatTexture("resources/models/Goat/goat.png");
+    Image goatTexture("resources/models/goat.png");
     renderer->generateTexture("goatTexture", goatTexture);
 
-    Image treeTexture("resources/models/Tree/tree.png");
+    Image treeTexture("resources/models/tree.png");
     renderer->generateTexture("treeTexture", treeTexture);
     
     Image startScreenTexture("resources/images/startScreen.png");
     renderer->generateTexture("startScreen", startScreenTexture);
     
-    bug.setFrameDelay(2);
     bugVerticalSpeed = BUG_FLIGHT_HEIGHT / BUG_DIVE_DURATION;
     
     tree.offset = glm::vec3(2.6f, GROUND_Y, -8.0f);
@@ -73,8 +71,6 @@ namespace AvoidTheBug3D {
     seconds = 0;
     
     lightModifier = -0.01f;
-
-    boundingBoxModels = goat.boundingBoxSet.getModels();
   }
 
   GameLogic::~GameLogic() {
@@ -86,8 +82,6 @@ namespace AvoidTheBug3D {
   void GameLogic::initGame() {
     goat.offset = glm::vec3(-1.2f, GROUND_Y, -4.0f);
     bug.offset = glm::vec3(0.5f, GROUND_Y + BUG_FLIGHT_HEIGHT, -18.0f);
-    
-    bug.startAnimating();
     
     bugState = FLYING_STRAIGHT;
     bugPreviousState = FLYING_STRAIGHT;
@@ -255,7 +249,6 @@ namespace AvoidTheBug3D {
     if (bug.offset.x > -(bug.offset.z))
       bug.offset.x = -(bug.offset.z);
     
-    bug.animate();
   }
   
   void GameLogic::processGame(const KeyInput &keyInput) {
@@ -305,10 +298,6 @@ namespace AvoidTheBug3D {
         glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
       
       renderer->render(goat, "goatTexture");
-      for (auto &bbm : boundingBoxModels) {
-        renderer->render(bbm, goat.offset, goat.rotation, glm::vec4(0.5f, 0.5f, 1.0f, 0.4f));
-      }
-      
       renderer->render(bug, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
       renderer->render(tree, "treeTexture");
       
