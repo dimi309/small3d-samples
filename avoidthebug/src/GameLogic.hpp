@@ -48,6 +48,7 @@ namespace AvoidTheBug3D {
     float bugVerticalSpeed;
 
     Model skyRect, groundRect, msgRect, startScreenRect;
+    std::vector<Model> boundingBoxModels;
 
     double startSeconds;
 

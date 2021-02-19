@@ -34,14 +34,13 @@ using namespace small3d;
 namespace AvoidTheBug3D {
   
   GameLogic::GameLogic() :
-    goat("goat", "resources/models/Goat/goatAnim",
-	 19, "resources/models/GoatBB/GoatBB.obj"),
-    bug("bug", "resources/models/Bug/bugAnim", 9),
+    goat("goat", "resources/models/goat.glb", "Cube", "Armature.001", "Armature.001Action"),
+    bug("bug", "resources/models/bug.glb", "Cube"),
     tree("tree", "resources/models/Tree/tree.obj",
 	 1, "resources/models/TreeBB/TreeBB.obj"),
     bahSound("resources/sounds/bah.ogg"){
     
-    renderer = &Renderer::getInstance("Avoid the Bug 3D", 854, 480);
+    renderer = &Renderer::getInstance("Avoid the Bug 3D", 854, 480, 0.785f, 1.0f, 24.0f, "resources/shaders/", 1000);
     renderer->cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
     renderer->createRectangle(startScreenRect, glm::vec3(-1.0f, 1.0f, 1.0f),
@@ -74,6 +73,8 @@ namespace AvoidTheBug3D {
     seconds = 0;
     
     lightModifier = -0.01f;
+
+    boundingBoxModels = goat.boundingBoxSet.getModels();
   }
 
   GameLogic::~GameLogic() {
@@ -304,6 +305,10 @@ namespace AvoidTheBug3D {
         glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
       
       renderer->render(goat, "goatTexture");
+      for (auto &bbm : boundingBoxModels) {
+        renderer->render(bbm, goat.offset, goat.rotation, glm::vec4(0.5f, 0.5f, 1.0f, 0.4f));
+      }
+      
       renderer->render(bug, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
       renderer->render(tree, "treeTexture");
       
