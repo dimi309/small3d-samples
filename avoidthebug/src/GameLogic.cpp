@@ -51,11 +51,9 @@ namespace AvoidTheBug3D {
     renderer->createRectangle(groundRect, glm::vec3(-25.0f, GROUND_Y, MIN_Z),
       glm::vec3(25.0f, GROUND_Y, MAX_Z));
 
-    Image goatTexture("resources/models/goat.png");
-    renderer->generateTexture("goatTexture", goatTexture);
+    renderer->generateTexture("goatTexture", goat.getModel().defaultTextureImage);
 
-    Image treeTexture("resources/models/tree.png");
-    renderer->generateTexture("treeTexture", treeTexture);
+    renderer->generateTexture("treeTexture", tree.getModel().defaultTextureImage);
     
     Image startScreenTexture("resources/images/startScreen.png");
     renderer->generateTexture("startScreen", startScreenTexture);
