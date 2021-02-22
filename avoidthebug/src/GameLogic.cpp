@@ -35,8 +35,8 @@ namespace AvoidTheBug3D {
   
   GameLogic::GameLogic() :
     goat("goat", "resources/models/goat.glb", "Cube", "Armature.001", "Armature.001Action", 2),
-    bug("bug", "resources/models/bug.glb", "Cube"),
-    tree("tree", "resources/models/tree.glb", "Cube", "", "", 2),
+    bug("bug", "resources/models/bug.glb", "Cube", "Armature", "ArmatureAction.001"),
+    tree("tree", "resources/models/tree.glb", "Cube", "", "", 3),
     bahSound("resources/sounds/bah.ogg"){
     
     renderer = &Renderer::getInstance("Avoid the Bug 3D", 854, 480);
@@ -86,6 +86,7 @@ namespace AvoidTheBug3D {
     bugFramesInCurrentState = 1;
     
     startSeconds = glfwGetTime();
+    bug.startAnimating();
   }
   
   void GameLogic::moveGoat(const KeyInput &keyInput) {
@@ -211,7 +212,7 @@ namespace AvoidTheBug3D {
       } else {
         bugState = DIVING_DOWN;
       }
-      
+      bug.animate();
     }
     
     // Bug state: represent
