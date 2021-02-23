@@ -20,27 +20,27 @@ namespace small3d {
 
   /**
    * @class BoundingBoxSet
-   * @brief Set of bounding boxes for a SceneObject, normally loaded from a 
-   *        Wavefront file, allowing for collision detection.
-   *        In order to create these in Blender for example (see blender.org), 
-   *        just place them in the preferred position over a model. Ideally, 
-   *        they should be aligned with the axes, (but note that small3d does 
-   *        more than just a simple axis-aligned bounding box collision 
+   * @brief Set of bounding boxes for a SceneObject, normally loaded from a
+   *        Wavefront file, or calculated based on the vertices of a Model.
+   *        In order to create a BoundinBoxSet in Blender for example (see blender.org),
+   *        just place the boxes in the preferred position over a model. Ideally,
+   *        they should be aligned with the axes, (but note that small3d does
+   *        more than just a simple axis-aligned bounding box collision
    *        detection).
    *
-   *        Export the bounding boxes to a Wavefront file separately from the 
-   *        model. You can do this if you "save as" a new file after placing 
-   *        the boxes and deleting the original model. During export, only set 
-   *        the options Apply Modifiers, Include Edges (but not in newer 
-   *        versions of Blender, where it is not available), 
-   *        Objects as OBJ Objects and Keep Vertex Order. On the contrary to 
-   *        what is the case when exporting the Model itself, more than one 
+   *        Export the bounding boxes to a Wavefront file separately from the
+   *        model. You can do this if you "save as" a new file after placing
+   *        the boxes and deleting the original model. During export, only set
+   *        the options Apply Modifiers, Include Edges (but not in newer
+   *        versions of Blender, where it is not available),
+   *        Objects as OBJ Objects and Keep Vertex Order. On the contrary to
+   *        what is the case when exporting the Model itself, more than one
    *        bounding box objects can be exported to the same Wavefront file.
    *
-   *        It is good to keep the default origin in Blender for the models 
-   *        as well as the bounding boxes. User-set origins are ignored by 
-   *        Blender when exporting Wavefront files. That can cause 
-   *        misalignments between bounding boxes and models, even if 
+   *        It is good to keep the default origin in Blender for the models
+   *        as well as the bounding boxes. User-set origins are ignored by
+   *        Blender when exporting Wavefront files. That can cause
+   *        misalignments between bounding boxes and models, even if
    *        the origins of both have been properly set to a new position.
    */
 
@@ -51,15 +51,21 @@ namespace small3d {
     void loadFromFile(std::string fileLocation);
     void triangulate();
     void calcExtremes();
+    void generateBoxesFromExtremes();
+    void generateExtremes(std::vector<float>& vertexData, uint32_t subdivisions);
+    void generateSubExtremes(std::vector<float>& vertexData);
 
   public:
 
     /**
      * @brief Structure to hold the coordinates of the extremes of each box.
      */
-    typedef struct extremes_ {
-      float minZ, maxZ, minX, maxX, minY, maxY;
-    } extremes;
+    struct extremes {
+    
+      float minZ = 0.0f, maxZ = 0.0f, minX = 0.0f, maxX = 0.0f, minY = 0.0f, maxY = 0.0f;
+      bool tagged = false;
+    
+    };
 
     /**
      * @brief The extreme coordinates (max and min) of each box.
@@ -73,13 +79,25 @@ namespace small3d {
     int getNumBoxes() const;
 
     /**
-     * @brief Constructor
+     * @brief Constructor that loads a set of bounding boxes from a Wavefront file
      * @param fileLocation Location of the Wavefront file containing the
      *        bounding boxes
      *
      */
 
-    BoundingBoxSet(const std::string fileLocation = "");
+    BoundingBoxSet(const std::string& fileLocation = "");
+
+    /**
+     * @brief Constructor that creates a box set, constructed based on the vertex 
+     *        data that can be found in a Model.
+     * @param vertexData  The vertex data. Array of floats to be interpreted as
+     *                    an array of 4 component vertex coordinates.
+     * @param subdivisions How many times to subdivide the initially one created
+     *                     bounding box, getting more accurate collision detection
+     *                     at the expense of performance.
+     */
+
+    BoundingBoxSet(std::vector<float>& vertexData, uint32_t subdivisions);
 
     /**
      * @brief Destructor
@@ -87,13 +105,13 @@ namespace small3d {
     ~BoundingBoxSet() = default;
 
     /**
-     * @brief Vertex coordinates read from Wavefront .obj file
+     * @brief Vertex coordinates
      */
 
     std::vector<std::vector<float> > vertices;
 
     /**
-     * @brief Faces vertex indexes read from Wavefront .obj file (rectangles)
+     * @brief Faces vertex indexes (rectangles)
      */
 
     std::vector<std::vector<unsigned int> > facesVertexIndexes;
@@ -115,14 +133,14 @@ namespace small3d {
       const glm::vec3 thisRotation) const;
 
     /**
-     * @brief Check any of the corners of another set of bounding boxes 
+     * @brief Check any of the corners of another set of bounding boxes
      *        is inside any of the boxes of this set.
      * @param otherBoxSet   The other box set
      * @param thisOffset    The offset (location) of this box set
      * @param thisRotation  The rotation of this box set
      * @param otherOffset   The offset (location) of the other box set
      * @param otherRotation The rotation of the other box set
-     * @return True if a corner of the other bounding box set is contained in 
+     * @return True if a corner of the other bounding box set is contained in
      *         this set, False otherwise.
      */
 
