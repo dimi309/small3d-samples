@@ -53,11 +53,8 @@ namespace small3d
     float padding1;
     glm::mat4x4 cameraTransformation;
     glm::vec3 cameraOffset;
-    float padding2[25]; // Successively increased padding up to 64 x float
-                        // (256 bytes on windows where float is 4 bytes) for
-                        // ALL ubos. All smaller sizes were causing memory
-                        // alignment problems on one supported platform or
-                        // another.
+    float padding2[25]; // Paddings seem to work when the number of floats (not bytes)
+                        // add up to powers of two for each ubo.
   };
 
   /**
@@ -65,8 +62,10 @@ namespace small3d
    */
   struct UboModelPlacement {
     glm::mat4x4 modelTransformation;
+    glm::mat4x4 jointTransformations[Model::MAX_JOINTS_SUPPORTED];
     glm::vec3 modelOffset;
-    float padding[45];
+    uint32_t hasJoints = 0U;
+    float padding[236];
   };
 
   /**
@@ -95,6 +94,8 @@ namespace small3d
     static int realScreenWidth, realScreenHeight;
 
     std::string shadersPath = "";
+
+    static const uint32_t defaultMaxObjectsPerPass = 20;
 
     uint32_t maxObjectsPerPass = 0;
 
@@ -150,8 +151,8 @@ namespace small3d
 
     static std::vector<Model> nextModelsToDraw;
 
-    static VkVertexInputBindingDescription bd[3];
-    static VkVertexInputAttributeDescription ad[3];
+    static VkVertexInputBindingDescription bd[5];
+    static VkVertexInputAttributeDescription ad[5];
 
     static VkDescriptorSetLayout descriptorSetLayout;
     static VkDescriptorSet descriptorSet;
@@ -196,7 +197,7 @@ namespace small3d
 
     void setColourBuffer(glm::vec4 colour, uint32_t memIndex);
 
-    void positionNextModel(const glm::vec3 offset,
+    void positionNextModel(Model &model, const glm::vec3 offset,
       const glm::vec3 rotation,
       uint32_t memIndex);
 
@@ -238,7 +239,7 @@ namespace small3d
       // used for small3d resources.
       "resources1/shaders/",
 #endif
-      const uint32_t maxObjectsPerPass = 20);
+      const uint32_t maxObjectsPerPass = defaultMaxObjectsPerPass);
 #else
     Renderer(const std::string& windowTitle, const int width,
       const int height, const float fieldOfView, const float zNear,
@@ -329,7 +330,7 @@ namespace small3d
       const float zFar = 24.0f,
       const std::string& shadersPath =
       "resources/shaders/",
-      const uint32_t maxObjectsPerPass = 20);
+      const uint32_t maxObjectsPerPass = defaultMaxObjectsPerPass);
 
     /**
      * @brief Destructor

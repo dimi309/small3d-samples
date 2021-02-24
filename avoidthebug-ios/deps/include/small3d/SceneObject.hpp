@@ -26,17 +26,20 @@ namespace small3d
   /**
    * @class SceneObject
    *
-   * @brief An object that appears on the 3D scene. It is made up of one or more
-   *        models (the latter for animation), together with information about
-   *        positioning and rotation and collision detection functionality.
-   *        Models can be loaded from a Wavefront file.
-   *        Such a file can be exported from Blender for example (see blender.org).
-   *        From its menu, select File > Export > Wavefront (.obj). Then from the
+   * @brief An object that appears on the 3D scene. It is made up of a model, 
+   *        together with information for positioning, rotation and collision detection.
+   *        Models can be loaded from a Wavefront or glTF .glb file.
+   *        Wavefront files can be exported from Blender for example (see blender.org).
+   *        From the menu, select File > Export > Wavefront (.obj). Then, from the
    *        "Export OBJ" menu, only select "Write Normals", "Triangulate Faces" 
    *        and "Keep Vertex Order".
-   *        For exporting animations to a series of Wavefront files in a way 
+   *        Exporting .glb files is much simpler. Just do so using the default options.
+   *        For animating, more than one models can be loaded from Wavefront files.
+   *        For exporting animations from Blender to a series of Wavefront files in a way 
    *        that will allow this class to load them, also select "Animation" and 
    *        "Apply Modifiers".*
+   *        glTF animation is skeletal on the other hand, using a single model and joints
+   *        (see corresponding constructors).
    *
    */
 
@@ -50,6 +53,7 @@ namespace small3d
     int framesWaited;
     int numFrames;
     std::string name;
+    bool wavefront = false;
 
   public:
     /**
@@ -59,7 +63,7 @@ namespace small3d
     std::vector<Model> models;
 
     /**
-     * @brief Constructor
+     * @brief Wavefront .obj loading constructor
      *
      * @param name      The name of the object
      * @param modelPath The path to the file containing the object's model.
@@ -82,17 +86,44 @@ namespace small3d
      *                  state.
      *
      * @param boundingBoxSetPath The path to the file containing the object's
-     *                           bounding box set. If no such path is given, the
-     *                           object cannot be checked for collision
-     *                           detection.
+     *                           bounding box set. If no such path is given, a 
+     *                           single box set will be calculated, based on the
+     *                           model's vertices.
      * @param startFrameIndex The index number in the filename of the first file
      *                        of the animation sequence. The default value is 1.
      *                        If not loading an animation sequence, this parameter
      *                        is ignored.
+     * @param boundingBoxSubdivisions If not using bounding boxes loaded from a file,
+     *                        how many times to subdivide the initially one created
+     *                        bounding box, getting more accurate collision detection
+     *                        at the expense of performance.
      */
     SceneObject(const std::string name, const std::string modelPath,
 		const int numFrames = 1,
-		const std::string boundingBoxSetPath = "", const int startFrameIndex = 1);
+		const std::string boundingBoxSetPath = "", const int startFrameIndex = 1,
+      const uint32_t boundingBoxSubdivisions = 0);
+
+    /**
+     * @brief glTF .glb loading constructor
+     *
+     * @param name      The name of the object
+     * @param modelPath The path to the GLB file containing the object's model.
+     *
+     * @param modelMeshName The name of the mesh in the GLB file which will be loaded
+     *                      as the model.
+     *
+     * @param modelArmatureName The name of the armature binding the model to a set of joints.
+     * @param modelAnimationName The name of the animation to load for the model's joints.
+     * @param boundingBoxSubdivisions If not using bounding boxes loaded from a file,
+     *                        how many times to subdivide the initially one created
+     *                        bounding box, getting more accurate collision detection
+     *                        at the expense of performance.
+     *                      
+     */
+    SceneObject(const std::string name, const std::string modelPath,
+      const std::string& modelMeshName, const std::string& modelArmatureName = "",
+      const std::string& modelAnimationName = "",
+      const uint32_t boundingBoxSubdivisions = 0);
 
     /**
      * @brief Destructor
@@ -103,14 +134,7 @@ namespace small3d
      * @brief Get the object's model
      * @return The object's model
      */
-    Model& getModel() ;
-
-    /**
-     * @brief Is this an animated or a static object (is it associated with more than
-     *        one frames/models)?
-     * @return True if animated, False otherwise.
-     */
-    bool isAnimated() const;
+    Model& getModel();
 
     /**
      * @brief Get the name of the object
@@ -121,12 +145,12 @@ namespace small3d
     /**
      * Offset (position) of the object
      */
-    glm::vec3 offset;
+    glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
 
     /**
      * Rotation of the object (on x, y, z axes respectively)
      */
-    glm::vec3 rotation;
+    glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
     /**
      * @brief Start animating the object
