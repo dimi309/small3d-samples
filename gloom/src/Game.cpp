@@ -10,6 +10,7 @@
 #include <small3d/Logger.hpp>
 #include <cmath>
 #include <small3d/BasePath.hpp>
+#include <small3d/WavefrontFile.hpp>
 
 #define CAMERA_ROTATION_SPEED 0.08f
 #define CAMERA_SPEED 0.5f
@@ -40,8 +41,8 @@ Game::Game() {
   xMapSize = map.getXsize();
   yMapSize = map.getYsize();
 
-  cube = Model("resources/cube.obj");
-  plane = Model("resources/plane.obj");
+  cube = Model(WavefrontFile("resources/cube.obj"), "");
+  plane = Model(WavefrontFile("resources/plane.obj"), "");
 
   renderer->generateTexture("tileTexture", Image("resources/images/tile.png"));
 
