@@ -13,7 +13,8 @@
 Car::Car() :
   SceneObject("car", "resources/models/car/car.obj", 1,
 	      "resources/models/car/carBB.obj") {
-  wheel = Model(WavefrontFile("resources/models/car/wheel.obj"), "");
+  WavefrontFile w("resources/models/car/wheel.obj");
+  wheel = Model(&w, "");
   this->colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
