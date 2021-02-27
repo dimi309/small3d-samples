@@ -13,16 +13,18 @@
 
 #ifndef SMALL3D_OPENGL
 #include <vulkan/vulkan.h>
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
 #endif
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "Image.hpp"
-#include "GlbFile.hpp"
+#include "File.hpp"
 
 namespace small3d {
+  
   /**
-   * @struct	Model
+   * @class	Model
    *
    * @brief	A 3D model. It can be loaded from a Wavefront or glTF file.
    *            In the case of a Wavefront file, the format has to be somewhat specific,
@@ -30,22 +32,23 @@ namespace small3d {
    *            can be exported from Blender for example (see blender.org).
    *            From its menu, select File > Export > Wavefront (.obj). Then from the
    *            "Export OBJ" menu, only select "Write Normals", "Triangulate Faces" 
-   *            and "Keep Vertex Order".
+   *            and "Keep Vertex Order". Exporting .glb files is much simpler. Just do 
+   *            so using the default options.
    *            The 3D model can also be constructed procedurally by code, by inserting
    *            values to the appropriate member variables.
    */
 
-  struct Model {
-
+  class Model {
+    
   private:
 
     uint64_t numPoses = 0;
     uint32_t currentPose = 0;
 
   public:
-
+    
     /**
-     * @brief glTF joint
+     * @brief animation joint
      */
     struct Joint {
       uint32_t node = 0;
@@ -62,6 +65,10 @@ namespace small3d {
       std::vector<float> animTime;
     };
 
+    /**
+     * @brief Maximum number of supported joints
+     *        
+     */
     static const uint32_t MAX_JOINTS_SUPPORTED = 16;
 
     /**
@@ -77,8 +84,6 @@ namespace small3d {
      *        (Vulkan-specific, avoid direct manipulation)
      */
     bool alreadyInGPU = false;
-
-
 
     /**
      * @brief Buffer containing vertex positions
@@ -279,13 +284,6 @@ namespace small3d {
      */
     std::vector<Joint> joints;
 
-    /**
-     * @brief The armature, binding the model to
-     *        the joints
-     */
-    GlbFile::Node armature;
-
-
 #ifndef SMALL3D_OPENGL
     
     /**
@@ -307,27 +305,15 @@ namespace small3d {
      *
      */
     Model();
-
+    
     /**
-     * @brief Constructor that loads model from a Wavefront file
-     * @param fileLocation Location of the Wavefront file from which to load the
-     *                     model.
-     */
-    Model(const std::string& fileLocation);
-
-    /**
-     * @brief Constructor that loads model from a glTF .glb file
-     * @param fileLocation  Location of the .glb file from which to load the
-     *                      model.
-     * @param meshName      The name of the mesh in the .glb file which will be loaded
-     *                      as the model.
+     * @brief Constructor
      * 
-     * @param armatureName  The name of the armature binding the model to a set of joints.
-     * @param animationName The name of the animation to load for the model's joints.
-     *                      
+     * @param file     The file parsing object from which to load the model
+     * @param meshName The name of the model mesh in the file
+     * 
      */
-    Model(const std::string& fileLocation, const std::string& meshName, const std::string& armatureName = "",
-      const std::string& animationName = "");
+    Model(File* file, const std::string& meshName);
 
     /**
      * @brief Get the index of the current animation pose
@@ -347,7 +333,9 @@ namespace small3d {
      *  @param jointIdx The index of the joint in the list of joints
      *  @return The transform
      */
-    glm::mat4 getJointTransform(uint64_t jointIdx);
+    glm::mat4 getJointTransform(size_t jointIdx);
+
+    friend class GlbFile;
 
   };
 }
