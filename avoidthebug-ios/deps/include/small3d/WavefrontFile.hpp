@@ -9,8 +9,9 @@
 
 #pragma once
 #include <vector>
-#include "Model.hpp"
+#include "File.hpp"
 #include "BoundingBoxSet.hpp"
+#include <unordered_map>
 
 namespace small3d {
 
@@ -18,11 +19,13 @@ namespace small3d {
    * @class WavefrontFile
    * @brief Wavefront file parser class
    */
-  class WavefrontFile {
+  class WavefrontFile : public File {
+
   private:
 
-    std::string fileLocation = "";
-
+    int getTokens(const std::string& input, const char sep,
+      std::vector<std::string>& tokens);
+    
     // Does this file only contain triangles?
     bool onlyTriangles = true;
 
@@ -33,6 +36,8 @@ namespace small3d {
     std::vector<std::vector<uint32_t> > facesNormalIndices;
     std::vector<std::vector<float> > textureCoords;
     std::vector<std::vector<uint32_t> > textureCoordsIndices;
+    std::vector<std::string> objectNames;
+    std::unordered_map<std::string, size_t> objectStartFaceIdx;
 
     void loadVertexData(std::vector<float>& vertexData);
     void loadIndexData(std::vector<uint32_t>& indexData);
@@ -45,6 +50,14 @@ namespace small3d {
     // unique vertex - texture coordinates pairs.
     void correctDataVectors();
 
+    WavefrontFile(); // No default constructor
+
+    // Forbid moving and copying
+    WavefrontFile(WavefrontFile const&) = delete;
+    void operator=(WavefrontFile const&) = delete;
+    WavefrontFile(WavefrontFile&&) = delete;
+    void operator=(WavefrontFile&&) = delete;
+
   public:
     /**
      * @brief Constructor
@@ -54,14 +67,16 @@ namespace small3d {
 
     /**
      * @brief Load data from the Wavefront file into a Model
-     * @param The model to load the data to
+     * @param model The model to load the data to
+     * @param meshName The name of the mesh to load
      */
-    void load(Model& model);
+    void load(Model& model, const std::string& meshName);
 
     /**
      * @brief Load data from the Wavefront file into a BoundingBoxSet
-     * @param The BoundingBoxSet to load the data to
+     * @param boundingBoxSet The BoundingBoxSet to load the data to
      */
     void load(BoundingBoxSet& boundingBoxSet);
+
   };
 }
