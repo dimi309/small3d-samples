@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     double startSeconds = glfwGetTime();
     double seconds = glfwGetTime();
     double prevSeconds = seconds;
-    const uint32_t framerate = 20;
+    const uint32_t framerate = 30;
     constexpr double secondsInterval = 1.0 / framerate;
     obj.startAnimating();
     while (!glfwWindowShouldClose(window) && !done && seconds - startSeconds < 3.0) {
@@ -64,10 +64,11 @@ int main(int argc, char** argv) {
       glfwPollEvents();
       seconds = glfwGetTime();
       if (seconds - prevSeconds > secondsInterval) {
+	prevSeconds = seconds;
         if (esckey)
           break;
         obj.animate();
-        obj.rotation.y += 0.002f;
+        obj.rotation.y += 0.02f;
         renderer->clearScreen();
         hasTexture ?
           renderer->render(obj, objTextureName) :
