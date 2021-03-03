@@ -41,7 +41,7 @@ cd ..
 REM Not building ball because it needs to be skipped for OpenGL
 REM and continuing in a .bat for loop would produce a lot more
 REM code
-for %%A in (avoidthebug, chasethegoat, frogremixed, gloom) do (
+for %%A in (avoidthebug, chasethegoat, frogremixed, gloom, serial-model-renderer) do (
 cd %%A
 if exist deps rmdir /Q /S deps
 mkdir deps
