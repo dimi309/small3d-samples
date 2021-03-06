@@ -27,13 +27,6 @@ endlocal & exit /b 1
 echo Entering small3d directory (must have been copied here)...
 cd small3d
 if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-cd deps
-if exist include rmdir /Q /S include
-if exist lib rmdir /Q /S lib
-call prepare-mingw %1 %2
-if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
-cd ..
-if exist build rmdir /Q /S build
 call build-mingw %1 %2
 if %errorlevel% neq 0 endlocal & exit /b %errorlevel%
 cd ..
