@@ -42,8 +42,13 @@ int main(int argc, char** argv) {
     const std::string objTextureName = "objTexture";
     LOGINFO("Loading " + entry.path().string());
     SceneObject obj("object", entry.path().string(), "");
-    obj.offset = glm::vec3(0.0f, -1.0f, -3.0f);
-    
+
+    float scale = 2.0f / ((obj.boundingBoxSet.boxExtremes[0].maxX - obj.boundingBoxSet.boxExtremes[0].minX) / obj.getModel().origScale.x);
+
+    obj.getModel().scale = glm::vec3(scale);
+
+    obj.offset = glm::vec3(0.0f, -1.0f, -6.0f);
+
     bool hasTexture = false;
 
     if (obj.getModel().defaultTextureImage != nullptr) {
@@ -56,7 +61,7 @@ int main(int argc, char** argv) {
     double startSeconds = glfwGetTime();
     double seconds = glfwGetTime();
     double prevSeconds = seconds;
-    const uint32_t framerate = 30;
+    const uint32_t framerate = 60;
     constexpr double secondsInterval = 1.0 / framerate;
     obj.startAnimating();
     while (!glfwWindowShouldClose(window) && !done && seconds - startSeconds < 3.0) {
@@ -64,7 +69,7 @@ int main(int argc, char** argv) {
       glfwPollEvents();
       seconds = glfwGetTime();
       if (seconds - prevSeconds > secondsInterval) {
-	prevSeconds = seconds;
+        prevSeconds = seconds;
         if (esckey)
           break;
         obj.animate();
