@@ -19,12 +19,6 @@ exit_if_error() {
 echo "Entering small3d directory (must have been copied here)..."
 cd small3d
 exit_if_error
-git clean -fdx
-exit_if_error
-cd deps
-./prepare.sh $1 $2
-exit_if_error
-cd ..
 ./build.sh $1 $2
 exit_if_error
 cd ..
