@@ -2,6 +2,8 @@
 #include <small3d/SceneObject.hpp>
 #include <GLFW/glfw3.h>
 #include <filesystem>
+#include <small3d/GlbFile.hpp>
+#include <memory>
 
 using namespace small3d;
 
@@ -31,30 +33,64 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action,
   if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
     esckey = false;
 
-}
+};
+
+struct Object {
+  std::shared_ptr<SceneObject> so;
+  std::string textureName = "";
+};
 
 int main(int argc, char** argv) {
   try {
-    Renderer* renderer = &Renderer::getInstance("Serial renderer", 800, 600);
+    Renderer* renderer = &Renderer::getInstance("Serial renderer", 800, 600, 0.78f, 1.0f, 24.0f, "resources/shaders/", 500);
+    renderer->cameraPosition = glm::vec3(0.0f, 0.0f, 0.9f);
     GLFWwindow* window = renderer->getWindow();
     glfwSetKeyCallback(window, keyCallback);
 
     for (const auto& entry : std::filesystem::directory_iterator("resources/models")) {
-      const std::string objTextureName = "objTexture";
+      
+      std::vector<Object> objects;
       LOGINFO("Loading " + entry.path().string());
-      SceneObject obj("object", entry.path().string(), "");
 
-      float scale = 2.0f / ((obj.boundingBoxSet.boxExtremes[0].maxX - obj.boundingBoxSet.boxExtremes[0].minX) / obj.getModel().origScale.x);
+      float maxX = 0.0f;
+      float minX = 0.0f;
+      try
+      {
+        auto names = GlbFile(entry.path().string()).getMeshNames();
+        for (auto &name : names) {
+          Object ob;
+          ob.so = std::shared_ptr<SceneObject>(new SceneObject(name, entry.path().string(), name));
+          if (ob.so->getModel().defaultTextureImage != nullptr) {
+            renderer->generateTexture(name, *ob.so->getModel().defaultTextureImage);
+            ob.textureName = name;
+          }
 
-      obj.getModel().scale = glm::vec3(scale);
+          if (ob.so->boundingBoxSet.boxExtremes[0].minX < minX) minX = ob.so->boundingBoxSet.boxExtremes[0].minX;
+          if (ob.so->boundingBoxSet.boxExtremes[0].maxX > maxX) maxX = ob.so->boundingBoxSet.boxExtremes[0].maxX;
 
-      obj.offset = glm::vec3(0.0f, -1.0f, -6.0f);
+          objects.push_back(ob);
 
-      bool hasTexture = false;
+        }
+      }
+      catch (std::runtime_error &e) {
+        Object ob;
+        ob.so = std::shared_ptr<SceneObject>(new SceneObject("object", entry.path().string(), ""));
+        if (ob.so->getModel().defaultTextureImage != nullptr) {
+          renderer->generateTexture("object", *ob.so->getModel().defaultTextureImage);
+          ob.textureName = "object";
+        }
+        if (ob.so->boundingBoxSet.boxExtremes[0].minX < minX) minX = ob.so->boundingBoxSet.boxExtremes[0].minX;
+        if (ob.so->boundingBoxSet.boxExtremes[0].maxX > maxX) maxX = ob.so->boundingBoxSet.boxExtremes[0].maxX;
 
-      if (obj.getModel().defaultTextureImage != nullptr) {
-        hasTexture = true;
-        renderer->generateTexture(objTextureName, *obj.getModel().defaultTextureImage);
+        objects.push_back(ob);
+      }
+
+      float scale = 2.0f / (maxX - minX);
+
+      for (auto& ob : objects) {
+        ob.so->getModel().scale = glm::vec3(scale);
+        ob.so->offset += glm::vec3(0.0f, 0.0f, -5.0f);
+        ob.so->startAnimating();
       }
 
       bool done = false;
@@ -64,8 +100,8 @@ int main(int argc, char** argv) {
       double prevSeconds = seconds;
       const uint32_t framerate = 60;
       constexpr double secondsInterval = 1.0 / framerate;
-      obj.startAnimating();
-      while (!glfwWindowShouldClose(window) && !done && seconds - startSeconds < 3.0) {
+      
+      while (!glfwWindowShouldClose(window) && !done && seconds - startSeconds < 5.0) {
 
         glfwPollEvents();
         seconds = glfwGetTime();
@@ -73,20 +109,27 @@ int main(int argc, char** argv) {
           prevSeconds = seconds;
           if (esckey)
             break;
-          obj.animate();
-          obj.rotation.y += 0.02f;
           renderer->clearScreen();
-          hasTexture ?
-            renderer->render(obj, objTextureName) :
-            renderer->render(obj, glm::vec4(0.4f, 1.0f, 0.4f, 1.0f));
+          for (auto& ob : objects) {
+
+            ob.so->animate();
+            ob.so->rotation.y += 0.02f;
+            
+            ob.textureName != "" ?
+              renderer->render(*ob.so, ob.textureName) :
+              renderer->render(*ob.so, glm::vec4(0.4f, 1.0f, 0.4f, 1.0f));
+          }
+
+          
           renderer->swapBuffers();
         }
         if (esckey) done = true;
       }
 
-      renderer->deleteTexture(objTextureName);
-      renderer->clearBuffers(obj);
-
+      for (auto& ob : objects) {
+        renderer->deleteTexture(ob.textureName);
+        renderer->clearBuffers(*ob.so);
+      }
       if (done) break;
     }
   }
