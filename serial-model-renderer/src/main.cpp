@@ -48,42 +48,37 @@ int main(int argc, char** argv) {
     glfwSetKeyCallback(window, keyCallback);
 
     for (const auto& entry : std::filesystem::directory_iterator("resources/models")) {
-      
+
       std::vector<Object> objects;
       LOGINFO("Loading " + entry.path().string());
 
       float maxX = 0.0f;
       float minX = 0.0f;
+      std::vector<std::string> names;
+
       try
       {
-        auto names = GlbFile(entry.path().string()).getMeshNames();
-        for (auto &name : names) {
-          Object ob;
-          ob.so = std::shared_ptr<SceneObject>(new SceneObject(name, entry.path().string(), name));
-          if (ob.so->getModel().defaultTextureImage != nullptr) {
-            renderer->generateTexture(name, *ob.so->getModel().defaultTextureImage);
-            ob.textureName = name;
-          }
-
-          if (ob.so->boundingBoxSet.boxExtremes[0].minX < minX) minX = ob.so->boundingBoxSet.boxExtremes[0].minX;
-          if (ob.so->boundingBoxSet.boxExtremes[0].maxX > maxX) maxX = ob.so->boundingBoxSet.boxExtremes[0].maxX;
-
-          objects.push_back(ob);
-
-        }
+        names = GlbFile(entry.path().string()).getMeshNames();
       }
-      catch (std::runtime_error &e) {
+      catch (std::runtime_error& e) {
+        names.push_back("");
+      }
+
+      for (auto& name : names) {
         Object ob;
-        ob.so = std::shared_ptr<SceneObject>(new SceneObject("object", entry.path().string(), ""));
+        ob.so = std::shared_ptr<SceneObject>(new SceneObject(name, entry.path().string(), name));
         if (ob.so->getModel().defaultTextureImage != nullptr) {
-          renderer->generateTexture("object", *ob.so->getModel().defaultTextureImage);
-          ob.textureName = "object";
+          renderer->generateTexture(name, *ob.so->getModel().defaultTextureImage);
+          ob.textureName = name;
         }
+
         if (ob.so->boundingBoxSet.boxExtremes[0].minX < minX) minX = ob.so->boundingBoxSet.boxExtremes[0].minX;
         if (ob.so->boundingBoxSet.boxExtremes[0].maxX > maxX) maxX = ob.so->boundingBoxSet.boxExtremes[0].maxX;
 
         objects.push_back(ob);
+
       }
+
 
       float scale = 2.0f / (maxX - minX);
 
@@ -100,7 +95,7 @@ int main(int argc, char** argv) {
       double prevSeconds = seconds;
       const uint32_t framerate = 60;
       constexpr double secondsInterval = 1.0 / framerate;
-      
+
       while (!glfwWindowShouldClose(window) && !done && seconds - startSeconds < 5.0) {
 
         glfwPollEvents();
@@ -114,13 +109,13 @@ int main(int argc, char** argv) {
 
             ob.so->animate();
             ob.so->rotation.y += 0.02f;
-            
+
             ob.textureName != "" ?
               renderer->render(*ob.so, ob.textureName) :
               renderer->render(*ob.so, glm::vec4(0.4f, 1.0f, 0.4f, 1.0f));
           }
 
-          
+
           renderer->swapBuffers();
         }
         if (esckey) done = true;
