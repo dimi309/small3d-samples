@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 
       for (auto& ob : objects) {
         ob.so->getModel().scale = glm::vec3(scale);
-        ob.so->offset += glm::vec3(0.0f, 0.0f, -5.0f);
+        ob.so->offset = glm::vec3(0.0f, 0.0f, -5.0f);
         ob.so->startAnimating();
       }
 
